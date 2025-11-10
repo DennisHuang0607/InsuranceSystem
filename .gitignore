@@ -2,9 +2,7 @@
 # 1. IDE 和工作區配置 (Eclipse / STS)
 # -----------------------------------------------------------------
 .metadata/
-.settings/
-.classpath
-.project
+.settings/ 
 *.launch
 *.sublime-project
 *.sublime-workspace
@@ -13,7 +11,7 @@
 # 2. Maven 相關和編譯輸出
 # -----------------------------------------------------------------
 /target/
-pom.xml.tag
+pom.xml.tags
 pom.xml.releaseBackup
 pom.xml.versionsBackup
 pom.xml.next
