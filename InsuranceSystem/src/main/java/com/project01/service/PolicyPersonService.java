@@ -79,7 +79,7 @@ public class PolicyPersonService {
 		try {
 			if(policyPersonRepository.existsByPersonId(personId)) {
 				policyPersonRepository.deleteByPersonId(personId);
-				Response<PolicyPerson> response = new Response<>(200, "刪除成功", null);
+				Response<PolicyPerson> response = new Response<>(200, "人員刪除成功", null);
 				return ResponseEntity.ok(response);
 			}
 			else {

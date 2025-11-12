@@ -2,6 +2,10 @@ package com.project01.entity;
 
 import java.time.LocalDate;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.project01.component.PolicyNumberComponent;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,11 +14,27 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Policy")
 public class Policy {
+	
+	//用靜態setter注入，因為Entity不屬於Spring管理的Bean，所以不能用欄位注入
+//	private static PolicyNumberComponent policyNumberComponent;
+//	@Autowired
+//    public void setPolicyNumberComponent(PolicyNumberComponent component) {
+//        this.policyNumberComponent = component;
+//    }
+//	
+//	@PrePersist
+//    public void generatePolicyNumberIfNeeded() {
+//        if (policyNumber == null || policyNumber.isEmpty()) {
+//            this.policyNumber = policyNumberComponent.generateNewPolicyNumber(); 
+//        }
+//    }
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "policy_id")
