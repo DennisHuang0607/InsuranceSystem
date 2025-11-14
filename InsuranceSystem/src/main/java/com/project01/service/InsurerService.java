@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.project01.dto.Response;
 import com.project01.entity.Insurer;
 import com.project01.entity.Message;
 import com.project01.repository.InsurerRepository;
@@ -24,92 +25,65 @@ public class InsurerService {
 	private PasswordEncoder passwordEncoder;
 	
 	//新增Insurer
-	public ResponseEntity<Message> registerInsurer(Insurer insurer) {
-		
-		ResponseEntity<Message> response = null;
-		Message message = new Message();
+	public ResponseEntity<Response<Insurer>> registerInsurer(Insurer insurer) {
 		
 		try {
 			if(insurerRepository.existsByAccountId(insurer.getAccountId())) {
-				message.setCode(409);
-				message.setMessage("帳號已存在，請換一個試試");
-				return ResponseEntity.badRequest().body(message);
+				Response<Insurer> response = new Response<>(409,"帳號已存在，請換一個試試",null);
+				return ResponseEntity.status(409).body(response);
 			}
 			else {
 				String rawPasswword = insurer.getPassword();
 				String encodePassword = passwordEncoder.encode(rawPasswword);
 				insurer.setPassword(encodePassword);
 				Insurer newInsurer = insurerRepository.save(insurer);
-				message.setCode(200);
-				message.setMessage("保險員新增成功");
-				response = ResponseEntity.ok(message);
+				Response<Insurer> response = new Response<>(200,"保險員新增成功",newInsurer);
+				return ResponseEntity.ok(response);
 			}
 		}
 		catch (Exception e){
-			message.setCode(500);
-			message.setMessage("管理員新增失敗，系統異常了");
-			response = ResponseEntity.status(500).body(message);
+			Response<Insurer> response = new Response<>(500,"管理員新增失敗，系統異常了",null);
+			return ResponseEntity.status(500).body(response);
 		}
-
-		return response;
 	}
 	
 	//查詢全部Insurer
-	public ResponseEntity<Message> findAllInsurer(){
-		
-		ResponseEntity<Message> response = null;
-		Message message = new Message();
-		
+	public ResponseEntity<Response<List<Insurer>>> findAllInsurer(){
+
 		try {
 			List<Insurer> result = insurerRepository.findAll();
-			message.setCode(200);
-			message.setMessage("保險員資料查詢成功");
-			response = ResponseEntity.ok(message);
+			Response<List<Insurer>> response = new Response<>(200,"保險員資料查詢成功",result);
+			return ResponseEntity.ok(response);
 		}
 		catch(Exception e){
-			message.setCode(500);
-			message.setMessage("保險員資料查詢失敗，資料庫可能連線異常");
-			response = ResponseEntity.status(500).body(message);
+			Response<List<Insurer>> response = new Response<>(500,"保險員資料查詢失敗，資料庫可能連線異常",null);
+			return ResponseEntity.status(500).body(response);
 		}
-		
-		return response;
-		
 	}
 	
 	//查詢單一Insurer
-	public ResponseEntity<Message> findInsurerByAccountId(String accountId){
-		
-		ResponseEntity<Message> response = null;
-		Message message = new Message();
+	public ResponseEntity<Response<Optional<Insurer>>> findInsurerByAccountId(String accountId){
 
 		try {
 			Optional<Insurer> insurer = insurerRepository.findByAccountId(accountId);
 			if(insurer.isPresent()) {
-				message.setCode(200);
-				message.setMessage("查到保險員： " + accountId);
-				response = ResponseEntity.ok(message);
+				Response<Optional<Insurer>> response = new Response<>(200,"保險員查詢成功",insurer);
+				return ResponseEntity.ok(response);
 			}
 			else {
-				message.setCode(200);
-				message.setMessage("查無保險員: " + accountId);
+				Response<Optional<Insurer>> response = new Response<>(404,"保險員查詢失敗",null);
+				return ResponseEntity.status(404).body(response);
 			}
 		}
 		catch(Exception e){
-			message.setCode(500);
-			message.setMessage("保險員資料查詢失敗，資料庫可能連線異常");
-			response = ResponseEntity.status(500).body(message);
-		}
-		
-		return response;
-		
+			Response<Optional<Insurer>> response = new Response<>(500,"保險員查詢失敗，資料庫可能連線異常",null);
+			return ResponseEntity.status(500).body(response);
+		}		
 	}
 	
 	//更新Insurer
-	public ResponseEntity<Message> updateInsurer(Insurer updateInsurer){
-		
-		ResponseEntity<Message> response = null;
-		Message message = new Message();
-		
+	public ResponseEntity<Response<Insurer>> updateInsurer(Insurer updateInsurer){
+
 		try {
 			Optional<Insurer> findInsurer = insurerRepository.findByAccountId(updateInsurer.getAccountId());
 			if(findInsurer.isPresent()) {
@@ -120,54 +94,54 @@ public class InsurerService {
 				insurer.setEmail(updateInsurer.getEmail());
 				
 				Insurer newInsurer = insurerRepository.save(insurer);
-				message.setCode(200);
-				message.setMessage("保險員資料更新成功");
-				response = ResponseEntity.ok(message);
+				Response<Insurer> response = new Response<>(200,"保險員資料更新成功",newInsurer);
+				return ResponseEntity.ok(response);
 			}
 			else {
-				message.setCode(404);
-				message.setMessage("保險員資料更新失敗，帳號可能不存在");
-				response = ResponseEntity.status(404).body(message);
+				Response<Insurer> response = new Response<>(404,"保險員資料更新成功",null);
+				return ResponseEntity.status(404).body(response);
 			}
 		}
 		catch(Exception e){
-			message.setCode(500);
-			message.setMessage("保險員資料更新失敗，資料庫可能連線異常");
-			response = ResponseEntity.status(500).body(message);
+			Response<Insurer> response = new Response<>(500,"保險員資料更新失敗，資料庫可能連線異常",null);
+			return ResponseEntity.status(500).body(response);
 		}
-		
-		return response;
-		
 	}
 	
 	//刪除Insurer
 	@Transactional
-	public ResponseEntity<Message> deleteInsurerByAccountId(String accountId) {
-		
-		ResponseEntity<Message> response = null;
-		Message message = new Message();
-		
+	public ResponseEntity<Response<Insurer>> deleteInsurerByAccountId(String accountId) {
+
 		try {
 			boolean result = insurerRepository.existsByAccountId(accountId);
 			if(result) {
 				insurerRepository.deleteByAccountId(accountId);
-				message.setCode(200);
-				message.setMessage("刪除保險員成功");
-				response = ResponseEntity.ok(message);
+				Response<Insurer> response = new Response<>(200,"刪除保險員成功",null);
+				return ResponseEntity.ok(response);
 			}
 			else {
-				message.setCode(404);
-				message.setMessage("保險員資料刪除失敗，帳號可能不存在");
-				response = ResponseEntity.status(404).body(message);
+				Response<Insurer> response = new Response<>(404,"保險員資料刪除失敗，帳號可能不存在",null);
+				return ResponseEntity.status(404).body(response);
 			}
 		}
 		catch(Exception e){
-			message.setCode(500);
-			message.setMessage("保險員資料刪除失敗，資料庫可能連線異常" + e);
-			response = ResponseEntity.status(500).body(message);
+			Response<Insurer> response = new Response<>(500,"保險員資料刪除失敗，資料庫可能連線異常",null);
+			return ResponseEntity.status(500).body(response);
 		}
-		
-		return response;
+	}
+	
+	//查詢當前登入的Insurer
+	public ResponseEntity<Response<Insurer>> getCurrentInsurer(Authentication authentication){
+		String account = authentication.getName();
+		Optional<Insurer> findInsurer = insurerRepository.findByAccountId(account);
+		if(findInsurer.isPresent()) {
+			Response<Insurer> response = new Response<>(200,"已查到當前登入的保險員",findInsurer.get());
+			return ResponseEntity.ok(response);
+		}
+		else {
+			Response<Insurer> response = new Response<>(404,"當前未有保險員登入或帳號可能不存在",null);
+			return ResponseEntity.status(404).body(response);
+		}
 	}
 
 	
