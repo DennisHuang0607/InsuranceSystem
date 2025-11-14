@@ -37,7 +37,7 @@ public class PolicyPerson {
 	private String address;
 	@Column(name = "occuption",nullable = true)
 	private String occupation;
-	@OneToMany(mappedBy = "personId",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "person",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<PolicyPersonRole> roles;
 	
 	public int getPersonId() {

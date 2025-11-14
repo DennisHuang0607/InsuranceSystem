@@ -80,13 +80,13 @@ public class SecurityConfig {
 		AuthenticationManager insurerManger = authBuilder.build();
 		
 		http
-			.securityMatcher("/insurancesystem/insurer/login","/insurer/page/**","/insuranceCompany/page/**","/insuranceType/page/**","/policyPerson/page/**")
+			.securityMatcher("/insurancesystem/insurer/login","/insurer/page/**","/insuranceCompany/page/**","/insuranceType/page/**","/policyPerson/page/**","/policy/page/**","/api/**")
 			.authenticationManager(insurerManger)
 			.csrf(csrf -> csrf
 					.disable())
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/insurancesystem/home/**","/insurancesystem/*/login/**","/css/**","/vue/**","/sweetaert/**").permitAll()
-					.requestMatchers("/insurer/page/**","/insuranceCompany/page/**","/insuranceType/page/**","/policyPerson/page/**").hasRole("USER")
+					.requestMatchers("/insurer/page/**","/insuranceCompany/page/**","/insuranceType/page/**","/policyPerson/page/**","/policy/page/**","/api/**").hasRole("USER")
 					.anyRequest().authenticated()
 					)
 			.formLogin(form -> form

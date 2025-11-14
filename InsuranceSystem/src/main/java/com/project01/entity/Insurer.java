@@ -31,7 +31,7 @@ public class Insurer{
 	private String phone;
 	@Column(name = "email", nullable = true)
 	private String email;
-	@OneToMany(mappedBy = "insurerId",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "insurer",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<Policy> policies;
 	
 	public String getInsurerId() {

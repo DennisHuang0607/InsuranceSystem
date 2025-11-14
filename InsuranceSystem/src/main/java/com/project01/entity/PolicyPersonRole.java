@@ -12,10 +12,10 @@ public class PolicyPersonRole {
     private int id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "policy_id")
-    private Policy policyId;
+    private Policy policy;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
-    private PolicyPerson personId;
+    private PolicyPerson person;
     @Column(name = "role")
     private String role;
     
@@ -25,17 +25,17 @@ public class PolicyPersonRole {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Policy getPolicyId() {
-		return policyId;
+	public Policy getPolicy() {
+		return policy;
 	}
-	public void setPolicyId(Policy policyId) {
-		this.policyId = policyId;
+	public void setPolicy(Policy policy) {
+		this.policy = policy;
 	}
-	public PolicyPerson getPersonId() {
-		return personId;
+	public PolicyPerson getPerson() {
+		return person;
 	}
-	public void setPersonId(PolicyPerson personId) {
-		this.personId = personId;
+	public void setPerson(PolicyPerson person) {
+		this.person = person;
 	}
 	public String getRole() {
 		return role;

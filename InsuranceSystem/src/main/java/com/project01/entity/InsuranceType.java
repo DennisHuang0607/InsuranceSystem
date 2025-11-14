@@ -25,7 +25,7 @@ public class InsuranceType {
 	private String typeName;
 	@Column(name = "description",nullable = true)
 	private String description;
-	@OneToMany(mappedBy = "typeId",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "type",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<Policy> policies;
 	
 	public int getTypeId() {

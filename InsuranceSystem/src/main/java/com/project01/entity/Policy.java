@@ -43,13 +43,13 @@ public class Policy {
 	private String policyNumber;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_type_id")
-	private InsuranceType typeId;
+	private InsuranceType type;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
-	private InsuranceCompany companyId;
+	private InsuranceCompany company;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurer_id")
-	private Insurer insurerId;
+	private Insurer insurer;
 	@Column(name = "insured_amount")
 	private int insuredAmount;
 	@Column(name = "accept_date")
@@ -73,23 +73,23 @@ public class Policy {
 	public void setPolicyNumber(String policyNumber) {
 		this.policyNumber = policyNumber;
 	}
-	public InsuranceType getTypeId() {
-		return typeId;
+	public InsuranceType getType() {
+		return type;
 	}
-	public void setTypeId(InsuranceType typeId) {
-		this.typeId = typeId;
+	public void setType(InsuranceType type) {
+		this.type = type;
 	}
-	public InsuranceCompany getCompanyId() {
-		return companyId;
+	public InsuranceCompany getCompany() {
+		return company;
 	}
-	public void setCompanyId(InsuranceCompany companyId) {
-		this.companyId = companyId;
+	public void setCompany(InsuranceCompany company) {
+		this.company = company;
 	}
-	public Insurer getInsurerId() {
-		return insurerId;
+	public Insurer getInsurer() {
+		return insurer;
 	}
-	public void setInsurerId(Insurer insurerId) {
-		this.insurerId = insurerId;
+	public void setInsurer(Insurer insurer) {
+		this.insurer = insurer;
 	}
 	public int getInsuredAmount() {
 		return insuredAmount;
