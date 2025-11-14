@@ -39,7 +39,7 @@ public class Policy {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "policy_id")
 	private int policyId;
-	@Column(name = "policy_number", nullable = false, unique = true)
+	@Column(name = "policy_number", unique = true)
 	private String policyNumber;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_type_id")

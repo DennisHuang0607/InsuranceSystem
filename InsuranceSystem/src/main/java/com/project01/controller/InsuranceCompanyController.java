@@ -1,7 +1,5 @@
 package com.project01.controller;
 
-
-
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project01.dto.Response;
 import com.project01.entity.InsuranceCompany;
 import com.project01.entity.Message;
 import com.project01.repository.InsuranceCompanyRepository;
@@ -40,15 +39,13 @@ public class InsuranceCompanyController {
 	}
 	
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Message> registerInsuranceCompanyController(@RequestBody InsuranceCompany company) {
-		ResponseEntity<Message> response = insuranceCompanyService.registerInsuranceCompany(company);
-		return response;
+	public ResponseEntity<Response<InsuranceCompany>> registerInsuranceCompanyController(@RequestBody InsuranceCompany company) {
+		return insuranceCompanyService.registerInsuranceCompany(company);
 	}
 	
 	@GetMapping(path = "/findAll",produces = "application/json")
-	public ResponseEntity<Message> findAllInsuranceCompanyController() {
-		ResponseEntity<Message> response = insuranceCompanyService.findAllInsuranceCompany();
-		return response;
+	public ResponseEntity<Response<List<InsuranceCompany>>> findAllInsuranceCompanyController() {
+		return insuranceCompanyService.findAllInsuranceCompany();
 	}
 	
 	@GetMapping(path = "/showAll",produces = "application/json")
@@ -58,15 +55,13 @@ public class InsuranceCompanyController {
 	}
 	
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Message> updateInsuranceCompanyController(@RequestBody InsuranceCompany company) {
-		ResponseEntity<Message> response = insuranceCompanyService.updateInsuranceCompany(company);
-		return response;
+	public ResponseEntity<Response<InsuranceCompany>> updateInsuranceCompanyController(@RequestBody InsuranceCompany company) {
+		return  insuranceCompanyService.updateInsuranceCompany(company);
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<Message> deleteInsuranceCompanyController(@PathVariable("id") int companyId) {
-		ResponseEntity<Message> response = insuranceCompanyService.deleteInsuranceCompany(companyId);
-		return response;
+	public ResponseEntity<Response<InsuranceCompany>> deleteInsuranceCompanyController(@PathVariable("id") int companyId) {
+		return  insuranceCompanyService.deleteInsuranceCompany(companyId);
 	}
 
 }

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project01.dto.Response;
 import com.project01.entity.InsuranceType;
-import com.project01.entity.Message;
 import com.project01.repository.InsuranceTypeRepository;
 import com.project01.service.InsuranceTypeService;
 
@@ -36,33 +36,28 @@ public class InsuranceTypeController {
 	}
 
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Message> registerInsuranceTypeController(@RequestBody InsuranceType type){
-		ResponseEntity<Message> response = insuranceTypeService.registerInsuranceType(type);
-		return response;
+	public ResponseEntity<Response<InsuranceType>> registerInsuranceTypeController(@RequestBody InsuranceType type){
+		return insuranceTypeService.registerInsuranceType(type);
 	}
 	
 	@GetMapping(path = "/findAll",produces = "application/json")
-	public ResponseEntity<Message> findAllInsuranceTypeController(){
-		ResponseEntity<Message> response = insuranceTypeService.findAllInsuranceType();
-		return response;
+	public ResponseEntity<Response<List<InsuranceType>>> findAllInsuranceTypeController(){
+		return insuranceTypeService.findAllInsuranceType();
 	}
 	
 	@GetMapping(path = "/showAll",produces = "application/json")
 	public List<InsuranceType> showAllInsuranceTypeController(){
-		List<InsuranceType> list = insuranceTypeRepository.findAll();
-		return list;
+		return insuranceTypeRepository.findAll();
 	}
 	
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Message> updateInsuranceTypeController(@RequestBody InsuranceType type){
-		ResponseEntity<Message> response = insuranceTypeService.updateInsuranceType(type);
-		return response;
+	public ResponseEntity<Response<InsuranceType>> updateInsuranceTypeController(@RequestBody InsuranceType type){
+		return insuranceTypeService.updateInsuranceType(type);
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<Message> deleteInsuranceTypeController(@PathVariable("id") int typeId){
-		ResponseEntity<Message> response = insuranceTypeService.deleteInsuranceType(typeId);
-		return response;
+	public ResponseEntity<Response<InsuranceType>> deleteInsuranceTypeController(@PathVariable("id") int typeId){
+		return insuranceTypeService.deleteInsuranceType(typeId);
 	}
 	
 }

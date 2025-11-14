@@ -41,71 +41,14 @@
                 保險員功能
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createPolicyModal">保單新增</a></li>
-                <li><a class="dropdown-item" href="">保單總覽</a></li>
+                <li><a class="dropdown-item" href="/policy/page/create">保單新增</a></li>
+                <li><a class="dropdown-item" href="/policy/page/showall">保單總覽</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createCompanyModal" @click="resetCompanyForm">保險公司新增</a></li>
                 <li><a class="dropdown-item" href="/insuranceCompany/page/showall">保險公司清單</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createTypeModal"  @click="resetTypeForm">保單類型新增</a></li>
                 <li><a class="dropdown-item" href="/insuranceType/page/showall">保單類型清單</a></li>
-                <li><a class="dropdown-item" href="">人員清單</a></li>
+                <li><a class="dropdown-item" href="/policyPerson/page/showall">人員清單</a></li>
             </ul>
-        </div>
-
-        <!-- Bootstrap Modal (保單新增) -->
-        <div class="modal fade" id="createPolicyModal" tabindex="-1" aria-labelledby="createPolicyModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createPolicyModalLabel">保單新增</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="createPolicyNumber" class="form-label">保單號碼</label>
-                                <input type="text" class="form-control" id="createPolicyNumber">
-                            </div>
-                            <div class="mb-3">
-                                <label for="createTypeNameByPolicy" class="form-label">保單類型</label>
-                                <input type="text" class="form-control" id="createTypeNameByPolicy">
-                            </div>
-                            <div class="mb-3">
-                                <label for="createCompanyNameByPolicy" class="form-label">保險公司</label>
-                                <input type="text" class="form-control" id="createCompanyNameByPolicy">
-                            </div>
-                            <div class="mb-3">
-                                <label for="createInsurerName" class="form-label">保險員</label>
-                                <input type="text" class="form-control" id="createInsurerName">
-                            </div>
-                            <div class="mb-3">
-                                <label for="createAmount" class="form-label">保費</label>
-                                <input type="text" class="form-control" id="createAmount">
-                            </div>
-                            <div class="mb-3">
-                                <label for="createAcceptDate" class="form-label">受理日</label>
-                                <input type="text" class="form-control" id="createAcceptDate">
-                            </div>
-                            <div class="mb-3">
-                                <label for="createBeginDate" class="form-label">起始日</label>
-                                <input type="text" class="form-control" id="createBeginDate">
-                            </div>
-                            <div class="mb-3">
-                                <label for="createEndDate" class="form-label">到期日</label>
-                                <input type="text" class="form-control" id="createEndDate">
-                            </div>
-                            <div class="mb-3">
-                                <label for="createPaymentType" class="form-label">繳別</label>
-                                <input type="text" class="form-control" id="createPaymentType">
-                            </div>
-                        </form>
-                        <div id="resultMsgPolicy"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" @click="createPolicyHandler">新增</button>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Bootstrap Modal (保險公司新增) -->
@@ -267,8 +210,8 @@
     const functions = {
         //後端撈資料
         fetchCompanies(){
-            $.getJSON('/api/v1/insuranceCompany/showAll', (list)=>{
-                this.companyData = list;
+            $.getJSON('/api/v1/insuranceCompany/showAll', (data)=>{
+                this.companyData = data;
             });
         },
         //取消勾選
@@ -447,10 +390,7 @@
             };
             $('#resultMsgType').text('');
         },
-        //新增保單
-        createPolicyHandler(e){
-
-        },
+        
     }
     const app = Vue.createApp({
         data(){
