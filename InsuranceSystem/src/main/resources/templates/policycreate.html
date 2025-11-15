@@ -141,26 +141,29 @@
                                 <input type="text" class="form-control" :value="policy.insurer.name" disabled>
                             </div>
                             <div class="col-md-4">
-                                <label for="" class="form-label">受理日</label>
-                                <input type="text" class="form-control" id="" required>
+                                <label for="acceptDate" class="form-label">受理日</label>
+                                <input type="date" class="form-control" id="acceptDate" v-model="policy.acceptDate" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="" class="form-label">起始日</label>
-                                <input type="text" class="form-control" id="" required>
+                                <label for="beginDate" class="form-label">起始日</label>
+                                <input type="date" class="form-control" id="beginDate" v-model="policy.beginDate" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="" class="form-label">到期日</label>
-                                <input type="text" class="form-control" id="" required>
+                                <label for="endDate" class="form-label">到期日</label>
+                                <input type="date" class="form-control" id="endDate" v-model="policy.endDate" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="" class="form-label">保費</label>
-                                <input type="text" class="form-control" id="" required>
+                                <label for="insuredAmount" class="form-label">保費</label>
+                                <input type="number" class="form-control" id="insuredAmount" v-model="policy.insuredAmount" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="" class="form-label">繳費方式</label>
-                                <select class="form-select" id="">
-                                    <option selected disabled value="">Choose...</option>
-                                    <option>...</option>
+                                <label for="paymentType" class="form-label">繳費方式</label>
+                                <select class="form-select" id="paymentType" v-model="policy.paymentType">
+                                    <option selected disabled>Choose...</option>
+                                    <option value="monthly">月繳</option>
+                                    <option value="quarterly">季繳</option>
+                                    <option value="semiAnnually">半年繳</option>
+                                    <option value="annually">年繳</option>
                                 </select>
                             </div>
                             <div class="col-md-4 rightbox">
@@ -279,9 +282,14 @@
         types:[],
         companies:[],
         policy:{
-            type: null,
-            company: null,
-            insurer: null
+            type:{},
+            company:{},
+            insurer:{},
+            insuredAmount:'',
+            acceptDate:'',
+            beginDate:'',
+            endDate:'',
+            paymentType:''
         },
     }
 
