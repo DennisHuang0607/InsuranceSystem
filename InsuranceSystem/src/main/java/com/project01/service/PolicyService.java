@@ -2,6 +2,8 @@ package com.project01.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import com.project01.repository.PolicyRepository;
 
 @Service
 public class PolicyService {
+	private static final Logger logger = LoggerFactory.getLogger(PolicyService.class);
 
 	@Autowired
 	private PolicyRepository policyRepository;
@@ -21,19 +24,20 @@ public class PolicyService {
 	
 	//新增Policy
 	public ResponseEntity<Response<Policy>> registerPolicy(Policy policy){
-		try {
-			//自動產生policyNumber
-			String newPolicyNumber = policyNumberComponent.generateNewPolicyNumber();
-            policy.setPolicyNumber(newPolicyNumber);
+	    try {
+	        //自動產生policyNumber
+	        String newPolicyNumber = policyNumberComponent.generateNewPolicyNumber();
+	        policy.setPolicyNumber(newPolicyNumber);
 
-			Policy newPolicy = policyRepository.save(policy);
-			Response<Policy> response = new Response<>(200,"保險單新增成功",newPolicy);
-			return ResponseEntity.ok(response);
-		}
-		catch(Exception e){
-			Response<Policy> response = new Response<>(500,"保單新增失敗，系統異常了",null);
-			return ResponseEntity.status(500).body(response);
-		}
+	        Policy newPolicy = policyRepository.save(policy);
+	        Response<Policy> response = new Response<>(200,"保險單新增成功",newPolicy);
+	        return ResponseEntity.ok(response);
+	    }
+	    catch(Exception e){
+	        logger.error("保單新增失敗，後端發生異常:",e);
+	        Response<Policy> response = new Response<>(500,"保單新增失敗，系統異常了",null);
+	        return ResponseEntity.status(500).body(response);
+	    }
 	}
 	
 	//查詢所有Policy

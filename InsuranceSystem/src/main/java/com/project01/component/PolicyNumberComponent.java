@@ -21,7 +21,7 @@ public class PolicyNumberComponent {
             String datePart = LocalDate.now().toString().replace("-", "");
 
             //查詢當天最大編號
-            String hql = "SELECT MAX(p.policy_number) FROM Policy p WHERE p.policy_number LIKE :prefixDate";
+            String hql = "SELECT MAX(p.policyNumber) FROM Policy p WHERE p.policyNumber LIKE :prefixDate";
             String likePattern = prefix + datePart + "%";
 
             List<String> result = entityManager.createQuery(hql, String.class)

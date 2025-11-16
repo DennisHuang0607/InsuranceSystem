@@ -19,7 +19,7 @@ import com.project01.repository.InsurerRepository;
 @Controller
 @RequestMapping(path = "/admin/page")
 public class AdminPageController {
-	private Logger logger = LoggerFactory.getLogger(AdminPageController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminPageController.class);
 	
 	public AdminPageController(){
 		logger.info("Admin Page Controller 配置成功...");

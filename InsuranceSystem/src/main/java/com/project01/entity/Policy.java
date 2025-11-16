@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project01.component.PolicyNumberComponent;
 
 import jakarta.persistence.Column;
@@ -21,20 +22,6 @@ import jakarta.persistence.Table;
 @Table(name = "Policy")
 public class Policy {
 	
-	//用靜態setter注入，因為Entity不屬於Spring管理的Bean，所以不能用欄位注入
-//	private static PolicyNumberComponent policyNumberComponent;
-//	@Autowired
-//    public void setPolicyNumberComponent(PolicyNumberComponent component) {
-//        this.policyNumberComponent = component;
-//    }
-//	
-//	@PrePersist
-//    public void generatePolicyNumberIfNeeded() {
-//        if (policyNumber == null || policyNumber.isEmpty()) {
-//            this.policyNumber = policyNumberComponent.generateNewPolicyNumber(); 
-//        }
-//    }
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "policy_id")
@@ -43,12 +30,15 @@ public class Policy {
 	private String policyNumber;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurance_type_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "policies"})
 	private InsuranceType type;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "policies"})
 	private InsuranceCompany company;
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insurer_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "policies"})
 	private Insurer insurer;
 	@Column(name = "insured_amount")
 	private int insuredAmount;

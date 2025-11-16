@@ -23,9 +23,8 @@ import com.project01.service.InsuranceTypeService;
 @RestController()
 @RequestMapping(path = "/api/v1/insuranceType")
 public class InsuranceTypeController {
+	private static final Logger logger = LoggerFactory.getLogger(InsuranceTypeController.class);
 	
-	@Autowired
-	private static Logger logger = LoggerFactory.getLogger(InsuranceTypeController.class);
 	@Autowired
 	private InsuranceTypeService insuranceTypeService;
 	@Autowired

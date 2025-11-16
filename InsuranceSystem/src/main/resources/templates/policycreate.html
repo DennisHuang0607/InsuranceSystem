@@ -122,7 +122,7 @@
                                 <label for="type" class="form-label">保單類型</label>
                                 <select class="form-select" id="type" v-model="policy.type" required>
                                     <option selected disabled value="">請選擇...</option>
-                                    <option v-for="type in types" :key="type.insuranceTypeId" :value="type">
+                                    <option v-for="type in types" :key="type.typeId" :value="type">
                                         {{type.typeName}}
                                     </option>
                                 </select>
@@ -167,7 +167,7 @@
                                 </select>
                             </div>
                             <div class="col-md-4 rightbox">
-                                <button class="btn btn-primary" type="submit">Submit form</button>
+                                <button class="btn btn-primary" type="button" id="policyCreate" @click="createPolicyHandler">新增</button>
                             </div>
                         </form>
                     </div>
@@ -295,7 +295,7 @@
 
     const policyFunctions = {
         //查詢保單類型
-        fetchTypes() {
+        fetchTypes(){
             $.ajax({
                 url: '/api/v1/insuranceType/findAll',
                 type: 'GET',
@@ -308,7 +308,7 @@
             });
         },
         //查詢保險公司
-        fetchCompanies() {
+        fetchCompanies(){
             $.ajax({
                 url: '/api/v1/insuranceCompany/findAll',
                 type: 'GET',
@@ -321,7 +321,7 @@
             });
         },
         //取得當前登入的保險員
-        fetchCurrentInsurer() {
+        fetchCurrentInsurer(){
             $.ajax({
                 url:'/api/v1/insurer/current',
                 type: 'GET',
@@ -332,8 +332,45 @@
                     console.error(xhr.responseJSON.message)
                 },
             })
-        }
+        },
+        //確認保單資料
+        checkHandler(){
+            console.log(this.policy);
+        },
+        //新增保單-送出
+        createPolicyHandler(e){
+            console.log('送出的policy內容：',this.policy);
 
+            let urlString = '/api/v1/policy/register';
+            let jsonDate = JSON.stringify(this.policy);
+            $.ajax({
+                url:urlString,
+                data:jsonDate,
+                type:'POST',
+                //dataType:'json',
+                contentType:'application/json',
+                success:(data,status,xhr) => {
+                    let successMsg = data.message;
+                    console.log(successMsg);
+                },
+                error:(xhr,status,error) => {
+                    let errorMsg = xhr.responseJSON.message;
+                    console.log(errorMsg);
+                }
+            })
+        },
+        //新增被保人角色-送出
+        createInsuredHandler(){
+
+        },
+        //新增投保人角色-送出
+        createPolicyHolder(){
+
+        },
+        //新增受益人角色-送出
+        createBeneficiaryHandler(){
+
+        },
     }
 
     const policyApp = Vue.createApp({

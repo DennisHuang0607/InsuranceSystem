@@ -19,7 +19,6 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(path = "/insurancesystem")
 public class HomeController {
-	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	public HomeController() {

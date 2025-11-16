@@ -26,9 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController()
 @RequestMapping(path = "/api/v1/insuranceCompany")
 public class InsuranceCompanyController {
+	private static final Logger logger = LoggerFactory.getLogger(InsuranceCompanyController.class);
 	
-	@Autowired
-	private static Logger logger = LoggerFactory.getLogger(InsuranceCompanyController.class);
 	@Autowired
 	private InsuranceCompanyService insuranceCompanyService;
 	@Autowired

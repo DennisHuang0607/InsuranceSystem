@@ -21,9 +21,8 @@ import com.project01.service.PolicyPersonService;
 @RestController
 @RequestMapping(path = "/api/v1/PolicyPerson")
 public class PolicyPersonController {
-
-	@Autowired
-	private static Logger logger = LoggerFactory.getLogger(PolicyPersonController.class);
+	private static final Logger logger = LoggerFactory.getLogger(PolicyPersonController.class);
+	
 	@Autowired
 	private PolicyPersonService policyPersonService;
 	
