@@ -119,7 +119,7 @@
                     <div class="">
                         <form class="row g-3 p-4">
                             <div class="col-md-4">
-                                <label for="type" class="form-label">保單類型</label>
+                                <label for="type" class="form-label">保單類型*</label>
                                 <select class="form-select" id="type" v-model="policy.type" required>
                                     <option selected disabled value="">請選擇...</option>
                                     <option v-for="type in types" :key="type.typeId" :value="type">
@@ -128,7 +128,7 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label for="company" class="form-label">保險公司</label>
+                                <label for="company" class="form-label">保險公司*</label>
                                 <select class="form-select" id="company" v-model="policy.company" required>
                                     <option selected disabled value="">請選擇...</option>
                                     <option v-for="company in companies" :key="company.companyId" :value="company">
@@ -137,27 +137,27 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label for="insurer" class="form-label">保險員</label>
+                                <label for="insurer" class="form-label">保險員*</label>
                                 <input type="text" class="form-control" :value="policy.insurer.name" disabled>
                             </div>
                             <div class="col-md-4">
-                                <label for="acceptDate" class="form-label">受理日</label>
+                                <label for="acceptDate" class="form-label">受理日*</label>
                                 <input type="date" class="form-control" id="acceptDate" v-model="policy.acceptDate" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="beginDate" class="form-label">起始日</label>
+                                <label for="beginDate" class="form-label">起始日*</label>
                                 <input type="date" class="form-control" id="beginDate" v-model="policy.beginDate" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="endDate" class="form-label">到期日</label>
+                                <label for="endDate" class="form-label">到期日*</label>
                                 <input type="date" class="form-control" id="endDate" v-model="policy.endDate" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="insuredAmount" class="form-label">保費</label>
+                                <label for="insuredAmount" class="form-label">保費*</label>
                                 <input type="number" class="form-control" id="insuredAmount" v-model="policy.insuredAmount" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="paymentType" class="form-label">繳費方式</label>
+                                <label for="paymentType" class="form-label">繳費方式*</label>
                                 <select class="form-select" id="paymentType" v-model="policy.paymentType">
                                     <option selected disabled>Choose...</option>
                                     <option value="monthly">月繳</option>
@@ -339,6 +339,23 @@
         },
         //新增保單-送出
         createPolicyHandler(e){
+            const vm = this;//保證永遠指向Vue
+
+            if(!vm.policy.type.typeId || !vm.policy.company.companyId || !vm.policy.insuredAmount || !vm.policy.acceptDate || 
+               !vm.policy.beginDate || !vm.policy.endDate || !vm.policy.paymentType){
+                Swal.fire({
+                    position: "top-end",
+                    width: "25em",
+                    heightAuto: true,
+                    icon: "error",
+                    title: "保單送出失敗",
+                    text: "保單中*為必填欄位，請勿留空！",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return;
+            }
+
             console.log('送出的policy內容：',this.policy);
 
             let urlString = '/api/v1/policy/register';
@@ -347,18 +364,57 @@
                 url:urlString,
                 data:jsonDate,
                 type:'POST',
-                //dataType:'json',
+                dataType:'json',
                 contentType:'application/json',
                 success:(data,status,xhr) => {
                     let successMsg = data.message;
                     console.log(successMsg);
+                    Swal.fire({
+                        position: "top-end",
+                        width: "25em",
+                        heightAuto: true,
+                        icon: "success",
+                        title: successMsg,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    //將所有除了insurer的input清空
+                    vm.policy.type = {};
+                    vm.policy.company = {};
+                    vm.policy.insuredAmount = '';
+                    vm.policy.acceptDate = '';
+                    vm.policy.beginDate = '';
+                    vm.policy.endDate = '';
+                    vm.policy.paymentType = '';
                 },
                 error:(xhr,status,error) => {
                     let errorMsg = xhr.responseJSON.message;
                     console.log(errorMsg);
+                    Swal.fire({
+                        position: "top-end",
+                        width: "25em",
+                        heightAuto: true,
+                        icon: "error",
+                        title: "保單新增失敗",
+                        text: errorMsg,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }
             })
         },
+        //清除policy內容
+        // resetPolicy(){
+        //     this.policy = {
+        //         type:{},
+        //         company:{},
+        //         insuredAmount:'',
+        //         acceptDate:'',
+        //         beginDate:'',
+        //         endDate:'',
+        //         paymentType:''
+        //     };
+        // },
         //新增被保人角色-送出
         createInsuredHandler(){
 

@@ -30,7 +30,7 @@ public class PolicyService {
 	        policy.setPolicyNumber(newPolicyNumber);
 
 	        Policy newPolicy = policyRepository.save(policy);
-	        Response<Policy> response = new Response<>(200,"保險單新增成功",newPolicy);
+	        Response<Policy> response = new Response<>(200,"保單新增成功",newPolicy);
 	        return ResponseEntity.ok(response);
 	    }
 	    catch(Exception e){
