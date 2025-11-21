@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project01.dto.Response;
+import com.project01.dto.ResponseDTO;
 import com.project01.entity.Insurer;
 import com.project01.entity.Message;
 import com.project01.repository.InsurerRepository;
@@ -40,37 +40,37 @@ public class InsurerController {
 	
 	//新增Insurer
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<Insurer>> registerInsurerController(@RequestBody Insurer insurer) {
+	public ResponseEntity<ResponseDTO<Insurer>> registerInsurerController(@RequestBody Insurer insurer) {
 		return insurerService.registerInsurer(insurer);
 	}
 	
 	//查詢全部Insurer
 	@GetMapping(path = "/findAll",produces = "application/json")
-	public ResponseEntity<Response<List<Insurer>>> findAllInsurerController(){
+	public ResponseEntity<ResponseDTO<List<Insurer>>> findAllInsurerController(){
 		return insurerService.findAllInsurer();
 	}
 	
 	//查詢單一Insurer
 	@GetMapping(path = "/find/{account}",produces = "application/json")
-	public ResponseEntity<Response<Optional<Insurer>>> findInsurerByAccountIdController(@PathVariable("account") String accountId){
+	public ResponseEntity<ResponseDTO<Optional<Insurer>>> findInsurerByAccountIdController(@PathVariable("account") String accountId){
 		return insurerService.findInsurerByAccountId(accountId);
 	}
 	
 	//更新Insurer
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<Insurer>> updateInsurerController(@RequestBody Insurer updateInsurer){
+	public ResponseEntity<ResponseDTO<Insurer>> updateInsurerController(@RequestBody Insurer updateInsurer){
 		return insurerService.updateInsurer(updateInsurer);
 	}
 
 	//刪除Insurer
 	@DeleteMapping(path = "/delete/{account}",produces = "application/json")
-	public ResponseEntity<Response<Insurer>> deleteInsurerByAccountIdController(@PathVariable("account") String accountId){
+	public ResponseEntity<ResponseDTO<Insurer>> deleteInsurerByAccountIdController(@PathVariable("account") String accountId){
 		return insurerService.deleteInsurerByAccountId(accountId);
 	}
 	
 	//查詢當前登入的Insurer
 	@GetMapping("/current")
-	public ResponseEntity<Response<Insurer>> getCurrentInsurerController(Authentication authentication) {
+	public ResponseEntity<ResponseDTO<Insurer>> getCurrentInsurerController(Authentication authentication) {
 	    return insurerService.getCurrentInsurer(authentication);
 	}
 	

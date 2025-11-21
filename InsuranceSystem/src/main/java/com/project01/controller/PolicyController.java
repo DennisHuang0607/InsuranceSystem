@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project01.dto.Response;
+import com.project01.dto.PolicyAndRolesDTO;
+import com.project01.dto.ResponseDTO;
 import com.project01.entity.Policy;
 import com.project01.service.PolicyService;
 
@@ -33,22 +34,27 @@ public class PolicyController {
 	}
 
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<Policy>> registerPolicyController(@RequestBody Policy policy){
+	public ResponseEntity<ResponseDTO<Policy>> registerPolicyController(@RequestBody Policy policy){
 		return policyService.registerPolicy(policy);
 	}
 	
+	@PostMapping(path = "/registerWithRoles",consumes = "application/json",produces = "application/json")
+	public ResponseEntity<ResponseDTO<Policy>> registerPolicyWithRolesController(@RequestBody PolicyAndRolesDTO request){
+		return policyService.registerPolicyWithRoles(request);
+	}
+	
 	@GetMapping(path = "/findAll",produces = "application/json")
-	public ResponseEntity<Response<List<Policy>>> findAllPolicyController(){
+	public ResponseEntity<ResponseDTO<List<Policy>>> findAllPolicyController(){
 		return policyService.findAllPolicy();
 	}
 	
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<Policy>> updatePolicyController(@RequestBody Policy policy){
+	public ResponseEntity<ResponseDTO<Policy>> updatePolicyController(@RequestBody Policy policy){
 		return policyService.updatePolicy(policy);
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<Response<Policy>> deletePolicy(@PathVariable("id") int policyId){
+	public ResponseEntity<ResponseDTO<Policy>> deletePolicy(@PathVariable("id") int policyId){
 		return policyService.deletePolicy(policyId);
 	}
 	

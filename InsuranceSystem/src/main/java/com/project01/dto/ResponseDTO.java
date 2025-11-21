@@ -1,15 +1,15 @@
 package com.project01.dto;
 
-public class Response<T> {
+public class ResponseDTO<T> {
 	private int statusCode;
     private String message;
     private T data;
     
-    public Response() {
+    public ResponseDTO() {
     	
     }
     
-    public Response(int statusCode, String message, T data) {
+    public ResponseDTO(int statusCode, String message, T data) {
         this.statusCode = statusCode;
         this.message = message;
         this.data = data;

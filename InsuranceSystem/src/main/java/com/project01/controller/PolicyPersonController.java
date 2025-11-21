@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project01.dto.Response;
+import com.project01.dto.ResponseDTO;
 import com.project01.entity.PolicyPerson;
 import com.project01.service.PolicyPersonService;
 
@@ -31,22 +31,22 @@ public class PolicyPersonController {
 	}
 	
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<PolicyPerson>> registerPolicyPersonController(PolicyPerson person){
+	public ResponseEntity<ResponseDTO<PolicyPerson>> registerPolicyPersonController(PolicyPerson person){
 		return policyPersonService.registerPolicyPerson(person);
 	}
 	
 	@GetMapping(path = "/findAll",produces = "application/json")
-	public ResponseEntity<Response<List<PolicyPerson>>> findAllPolicyPersonController(){
+	public ResponseEntity<ResponseDTO<List<PolicyPerson>>> findAllPolicyPersonController(){
 		return policyPersonService.findAllPolicyPerson();
 	}
 	
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<PolicyPerson>> updatePolicyPersonController(PolicyPerson person){
+	public ResponseEntity<ResponseDTO<PolicyPerson>> updatePolicyPersonController(PolicyPerson person){
 		return policyPersonService.updatePolicyPerson(person);
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<Response<PolicyPerson>>  deletePolicyPersonController(@PathVariable("id") int personId){
+	public ResponseEntity<ResponseDTO<PolicyPerson>>  deletePolicyPersonController(@PathVariable("id") int personId){
 		return policyPersonService.deletePolicyPerson(personId);
 	}
 	

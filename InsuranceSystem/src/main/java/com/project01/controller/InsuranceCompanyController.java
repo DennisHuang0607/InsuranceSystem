@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project01.dto.Response;
+import com.project01.dto.ResponseDTO;
 import com.project01.entity.InsuranceCompany;
 import com.project01.entity.Message;
 import com.project01.repository.InsuranceCompanyRepository;
@@ -38,12 +38,12 @@ public class InsuranceCompanyController {
 	}
 	
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<InsuranceCompany>> registerInsuranceCompanyController(@RequestBody InsuranceCompany company) {
+	public ResponseEntity<ResponseDTO<InsuranceCompany>> registerInsuranceCompanyController(@RequestBody InsuranceCompany company) {
 		return insuranceCompanyService.registerInsuranceCompany(company);
 	}
 	
 	@GetMapping(path = "/findAll",produces = "application/json")
-	public ResponseEntity<Response<List<InsuranceCompany>>> findAllInsuranceCompanyController() {
+	public ResponseEntity<ResponseDTO<List<InsuranceCompany>>> findAllInsuranceCompanyController() {
 		return insuranceCompanyService.findAllInsuranceCompany();
 	}
 	
@@ -54,12 +54,12 @@ public class InsuranceCompanyController {
 	}
 	
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<InsuranceCompany>> updateInsuranceCompanyController(@RequestBody InsuranceCompany company) {
+	public ResponseEntity<ResponseDTO<InsuranceCompany>> updateInsuranceCompanyController(@RequestBody InsuranceCompany company) {
 		return  insuranceCompanyService.updateInsuranceCompany(company);
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<Response<InsuranceCompany>> deleteInsuranceCompanyController(@PathVariable("id") int companyId) {
+	public ResponseEntity<ResponseDTO<InsuranceCompany>> deleteInsuranceCompanyController(@PathVariable("id") int companyId) {
 		return  insuranceCompanyService.deleteInsuranceCompany(companyId);
 	}
 

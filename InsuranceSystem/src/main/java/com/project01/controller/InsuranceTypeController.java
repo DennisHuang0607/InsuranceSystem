@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project01.dto.Response;
+import com.project01.dto.ResponseDTO;
 import com.project01.entity.InsuranceType;
 import com.project01.repository.InsuranceTypeRepository;
 import com.project01.service.InsuranceTypeService;
@@ -35,12 +35,12 @@ public class InsuranceTypeController {
 	}
 
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<InsuranceType>> registerInsuranceTypeController(@RequestBody InsuranceType type){
+	public ResponseEntity<ResponseDTO<InsuranceType>> registerInsuranceTypeController(@RequestBody InsuranceType type){
 		return insuranceTypeService.registerInsuranceType(type);
 	}
 	
 	@GetMapping(path = "/findAll",produces = "application/json")
-	public ResponseEntity<Response<List<InsuranceType>>> findAllInsuranceTypeController(){
+	public ResponseEntity<ResponseDTO<List<InsuranceType>>> findAllInsuranceTypeController(){
 		return insuranceTypeService.findAllInsuranceType();
 	}
 	
@@ -50,12 +50,12 @@ public class InsuranceTypeController {
 	}
 	
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Response<InsuranceType>> updateInsuranceTypeController(@RequestBody InsuranceType type){
+	public ResponseEntity<ResponseDTO<InsuranceType>> updateInsuranceTypeController(@RequestBody InsuranceType type){
 		return insuranceTypeService.updateInsuranceType(type);
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<Response<InsuranceType>> deleteInsuranceTypeController(@PathVariable("id") int typeId){
+	public ResponseEntity<ResponseDTO<InsuranceType>> deleteInsuranceTypeController(@PathVariable("id") int typeId){
 		return insuranceTypeService.deleteInsuranceType(typeId);
 	}
 	
