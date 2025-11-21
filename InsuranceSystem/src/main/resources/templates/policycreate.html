@@ -120,7 +120,7 @@
                         <form class="row g-3 p-4">
                             <div class="col-md-4">
                                 <label for="type" class="form-label">保單類型*</label>
-                                <select class="form-select" id="type" v-model="policy.type" required>
+                                <select class="form-select" id="type" v-model="policy.type">
                                     <option selected disabled value="">請選擇...</option>
                                     <option v-for="type in types" :key="type.typeId" :value="type">
                                         {{type.typeName}}
@@ -129,7 +129,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="company" class="form-label">保險公司*</label>
-                                <select class="form-select" id="company" v-model="policy.company" required>
+                                <select class="form-select" id="company" v-model="policy.company">
                                     <option selected disabled value="">請選擇...</option>
                                     <option v-for="company in companies" :key="company.companyId" :value="company">
                                         {{company.companyName}}
@@ -142,19 +142,19 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="acceptDate" class="form-label">受理日*</label>
-                                <input type="date" class="form-control" id="acceptDate" v-model="policy.acceptDate" required>
+                                <input type="date" class="form-control" id="acceptDate" v-model="policy.acceptDate">
                             </div>
                             <div class="col-md-4">
                                 <label for="beginDate" class="form-label">起始日*</label>
-                                <input type="date" class="form-control" id="beginDate" v-model="policy.beginDate" required>
+                                <input type="date" class="form-control" id="beginDate" v-model="policy.beginDate">
                             </div>
                             <div class="col-md-4">
                                 <label for="endDate" class="form-label">到期日*</label>
-                                <input type="date" class="form-control" id="endDate" v-model="policy.endDate" required>
+                                <input type="date" class="form-control" id="endDate" v-model="policy.endDate">
                             </div>
                             <div class="col-md-4">
                                 <label for="insuredAmount" class="form-label">保費*</label>
-                                <input type="number" class="form-control" id="insuredAmount" v-model="policy.insuredAmount" required>
+                                <input type="number" class="form-control" id="insuredAmount" v-model="policy.insuredAmount">
                             </div>
                             <div class="col-md-4">
                                 <label for="paymentType" class="form-label">繳費方式*</label>
@@ -173,59 +173,47 @@
 
                         <form class="row g-3 p-4">
                             <div class="col-md-4">
-                                <label for="type" class="form-label">保單類型*</label>
-                                <select class="form-select" id="type" v-model="policy.type" required>
-                                    <option selected disabled value="">請選擇...</option>
-                                    <option v-for="type in types" :key="type.typeId" :value="type">
-                                        {{type.typeName}}
-                                    </option>
-                                </select>
+                                <label for="" class="form-label">姓名</label>
+                                <input type="text" class="form-control" disabled>
                             </div>
                             <div class="col-md-4">
-                                <label for="company" class="form-label">保險公司*</label>
-                                <select class="form-select" id="company" v-model="policy.company" required>
-                                    <option selected disabled value="">請選擇...</option>
-                                    <option v-for="company in companies" :key="company.companyId" :value="company">
-                                        {{company.companyName}}
-                                    </option>
-                                </select>
+                                <label for="" class="form-label">身分證字號</label>
+                                <input type="" class="form-control" id="">
                             </div>
                             <div class="col-md-4">
-                                <label for="insurer" class="form-label">保險員*</label>
-                                <input type="text" class="form-control" :value="policy.insurer.name" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="acceptDate" class="form-label">受理日*</label>
-                                <input type="date" class="form-control" id="acceptDate" v-model="policy.acceptDate" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="beginDate" class="form-label">起始日*</label>
-                                <input type="date" class="form-control" id="beginDate" v-model="policy.beginDate" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="endDate" class="form-label">到期日*</label>
-                                <input type="date" class="form-control" id="endDate" v-model="policy.endDate" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="insuredAmount" class="form-label">保費*</label>
-                                <input type="number" class="form-control" id="insuredAmount" v-model="policy.insuredAmount" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="paymentType" class="form-label">繳費方式*</label>
-                                <select class="form-select" id="paymentType" v-model="policy.paymentType">
+                                <label for="" class="form-label">性別</label>
+                                <select class="form-select" id="">
                                     <option selected disabled>Choose...</option>
-                                    <option value="monthly">月繳</option>
-                                    <option value="quarterly">季繳</option>
-                                    <option value="semiAnnually">半年繳</option>
-                                    <option value="annually">年繳</option>
+                                    <option value="">男</option>
+                                    <option value="">女</option>
                                 </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="" class="form-label">生日</label>
+                                <input type="date" class="form-control" id="">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="" class="form-label">手機</label>
+                                <input type="" class="form-control" id="">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="" class="form-label">信箱</label>
+                                <input type="" class="form-control" id="">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="" class="form-label">地址</label>
+                                <input type="" class="form-control" id="">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="" class="form-label">職業</label>
+                                <input type="" class="form-control" id="">
                             </div>
                             <div class="col-md-4 rightbox">
                                 <button class="btn btn-primary" type="button" id="policyCreate" @click="createPolicyHandler">新增</button>
                             </div>
                         </form>
 
-                        
+
                     </div>
                 </div>
             </div>
