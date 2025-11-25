@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ import com.project01.entity.PolicyPerson;
 import com.project01.service.PolicyPersonService;
 
 @RestController
-@RequestMapping(path = "/api/v1/PolicyPerson")
+@RequestMapping(path = "/api/v1/policyPerson")
 public class PolicyPersonController {
 	private static final Logger logger = LoggerFactory.getLogger(PolicyPersonController.class);
 	
@@ -31,7 +32,7 @@ public class PolicyPersonController {
 	}
 	
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<ResponseDTO<PolicyPerson>> registerPolicyPersonController(PolicyPerson person){
+	public ResponseEntity<ResponseDTO<PolicyPerson>> registerPolicyPersonController(@RequestBody PolicyPerson person){
 		return policyPersonService.registerPolicyPerson(person);
 	}
 	
@@ -41,7 +42,7 @@ public class PolicyPersonController {
 	}
 	
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<ResponseDTO<PolicyPerson>> updatePolicyPersonController(PolicyPerson person){
+	public ResponseEntity<ResponseDTO<PolicyPerson>> updatePolicyPersonController(@RequestBody PolicyPerson person){
 		return policyPersonService.updatePolicyPerson(person);
 	}
 	

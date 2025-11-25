@@ -109,14 +109,14 @@
     </div>
 
     <div id="policyApp">
-
         <div class="container mt-5">
             <div class="card shadow mx-auto table-container">
+                <!--保單部分-->
                 <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0">保單新增</h5>
+                    <h5 class="mb-0">保單</h5>
                 </div>
                 <div class="card-body p-0">
-                    <div class="">
+                    <div>
                         <form class="row g-3 p-4">
                             <div class="col-md-4">
                                 <label for="type" class="form-label">保單類型*</label>
@@ -170,56 +170,347 @@
                                 <button class="btn btn-primary" type="button" id="policyCreate" @click="createPolicyHandler">新增</button>
                             </div>
                         </form>
-
-                        <form class="row g-3 p-4">
-                            <div class="col-md-4">
-                                <label for="" class="form-label">姓名</label>
-                                <input type="text" class="form-control" disabled>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="" class="form-label">身分證字號</label>
-                                <input type="" class="form-control" id="">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="" class="form-label">性別</label>
-                                <select class="form-select" id="">
-                                    <option selected disabled>Choose...</option>
-                                    <option value="">男</option>
-                                    <option value="">女</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="" class="form-label">生日</label>
-                                <input type="date" class="form-control" id="">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="" class="form-label">手機</label>
-                                <input type="" class="form-control" id="">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="" class="form-label">信箱</label>
-                                <input type="" class="form-control" id="">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="" class="form-label">地址</label>
-                                <input type="" class="form-control" id="">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="" class="form-label">職業</label>
-                                <input type="" class="form-control" id="">
-                            </div>
-                            <div class="col-md-4 rightbox">
-                                <button class="btn btn-primary" type="button" id="policyCreate" @click="createPolicyHandler">新增</button>
-                            </div>
-                        </form>
-
-
                     </div>
                 </div>
+                <!--投保人部分(policyholder)-->
+                <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">投保人</h5>
+                    <div>
+                        <button type="button" class="btn btn-primary me-2">選擇人員</button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#policyHolderModal">新增人員</button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div>        
+                        <form class="row g-3 p-4">
+                            <div class="col-md-4" v-show="isShow">
+                                <label for="policyHolderId" class="form-label">ID</label>
+                                <input type="text" class="form-control" id="policyHolderId" v-model="policyHolder.personId" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="policyHolderName" class="form-label">姓名</label>
+                                <input type="text" class="form-control" id="policyHolderName" v-model="policyHolder.name" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="policyHolderIdNumber" class="form-label">身分證字號</label>
+                                <input type="text" class="form-control" id="policyHolderIdNumber" v-model="policyHolder.idNumber" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="policyHolderGender" class="form-label">性別</label>
+                                <input type="text" class="form-control" id="policyHolderGender" :value="changeGender(policyHolder.gender)" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="policyHolderBirthDate" class="form-label">生日</label>
+                                <input type="date" class="form-control" id="policyHolderBirthDate" v-model="policyHolder.birthDate" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="policyHolderPhone" class="form-label">手機</label>
+                                <input type="text" class="form-control" id="policyHolderPhone" v-model="policyHolder.phone" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="policyHolderEmail" class="form-label">信箱</label>
+                                <input type="text" class="form-control" id="policyHolderEmail" v-model="policyHolder.email" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="policyHolderAddress" class="form-label">地址</label>
+                                <input type="text" class="form-control" id="policyHolderAddress" v-model="policyHolder.address" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="policyHolderOccupation" class="form-label">職業</label>
+                                <input type="text" class="form-control" id="policyHolderOccupation" v-model="policyHolder.occupation" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">角色</label>
+                                <input type="text" class="form-control" value="投保人" disabled>
+                            </div>
+                            <div class="col-md-4 rightbox">
+                                <button class="btn btn-primary" type="button" id="" @click="">新增</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--投保人Modal-->
+                <div class="modal fade" id="policyHolderModal" tabindex="-1" aria-labelledby="policyHolderModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="policyHolderModalLabel">人員新增</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="newPolicyHolderName" class="form-label">姓名*</label>
+                                        <input type="text" class="form-control" id="newPolicyHolderName" v-model="person.name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPolicyHolderIdNumber" class="form-label">身分證字號*</label>
+                                        <input type="text" class="form-control" id="newPolicyHolderIdNumber" v-model="person.idNumber">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPolicyHolderGender" class="form-label">性別</label>
+                                        <select class="form-select" id="newPolicyHolderGender" v-model="person.gender">
+                                            <option selected disabled>Choose...</option>
+                                            <option value="M">男</option>
+                                            <option value="F">女</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPolicyHolderBirthDate" class="form-label">生日*</label>
+                                        <input type="date" class="form-control" id="newPolicyHolderBirthDate" v-model="person.birthDate">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPolicyHolderPhone" class="form-label">手機*</label>
+                                        <input type="text" class="form-control" id="newPolicyHolderPhone" v-model="person.phone">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPolicyHolderEmail" class="form-label">信箱</label>
+                                        <input type="text" class="form-control" id="newPolicyHolderEmail" v-model="person.email">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPolicyHolderAddress" class="form-label">地址</label>
+                                        <input type="text" class="form-control" id="newPolicyHolderAddress" v-model="person.address">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPolicyHolderOccupation" class="form-label">職業</label>
+                                        <input type="text" class="form-control" id="newPolicyHolderOccupation" v-model="person.occupation">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" @click="checkRole('policyHolder')">新增</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--要保人部分(insured)-->
+                <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">要保人</h5>
+                    <div>
+                        <button type="button" class="btn btn-primary me-2">選擇人員</button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#insuredModal">新增人員</button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div>        
+                        <form class="row g-3 p-4">
+                            <div class="col-md-4" v-show="isShow">
+                                <label for="insuredId" class="form-label">ID</label>
+                                <input type="text" class="form-control" id="insuredId" v-model="insured.personId" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="insuredName" class="form-label">姓名</label>
+                                <input type="text" class="form-control" id="insuredName" v-model="insured.name" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="insuredIdNumber" class="form-label">身分證字號</label>
+                                <input type="text" class="form-control" id="insuredIdNumber" v-model="insured.idNumber" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="insuredGender" class="form-label">性別</label>
+                                <input type="text" class="form-control" id="insuredGender" :value="changeGender(insured.gender)" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="insuredBirthDate" class="form-label">生日</label>
+                                <input type="date" class="form-control" id="insuredBirthDate" v-model="insured.birthDate" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="insuredPhone" class="form-label">手機</label>
+                                <input type="text" class="form-control" id="insuredPhone" v-model="insured.phone" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="insuredEmail" class="form-label">信箱</label>
+                                <input type="text" class="form-control" id="insuredEmail" v-model="insured.email" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="insuredAddress" class="form-label">地址</label>
+                                <input type="text" class="form-control" id="insuredAddress" v-model="insured.address" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="insuredOccupation" class="form-label">職業</label>
+                                <input type="text" class="form-control" id="insuredOccupation" v-model="insured.occupation" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">角色</label>
+                                <input type="text" class="form-control" value="要保人" disabled>
+                            </div>
+                            <div class="col-md-4 rightbox">
+                                <button class="btn btn-primary" type="button" id="" @click="">新增</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--要保人Modal-->
+                <div class="modal fade" id="insuredModal" tabindex="-1" aria-labelledby="insuredModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="insuredModalLabel">人員新增</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="newInsuredName" class="form-label">姓名*</label>
+                                        <input type="text" class="form-control" id="newInsuredName" v-model="person.name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newInsuredIdNumber" class="form-label">身分證字號*</label>
+                                        <input type="text" class="form-control" id="newInsuredIdNumber" v-model="person.idNumber">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newInsuredGender" class="form-label">性別</label>
+                                        <select class="form-select" id="newInsuredGender" v-model="person.gender">
+                                            <option selected disabled>Choose...</option>
+                                            <option value="M">男</option>
+                                            <option value="F">女</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newInsuredBirthDate" class="form-label">生日*</label>
+                                        <input type="date" class="form-control" id="newInsuredBirthDate" v-model="person.birthDate">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newInsuredPhone" class="form-label">手機*</label>
+                                        <input type="text" class="form-control" id="newInsuredPhone" v-model="person.phone">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newInsuredEmail" class="form-label">信箱</label>
+                                        <input type="text" class="form-control" id="newInsuredEmail" v-model="person.email">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newInsuredAddress" class="form-label">地址</label>
+                                        <input type="text" class="form-control" id="newInsuredAddress" v-model="person.address">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newInsuredOccupation" class="form-label">職業</label>
+                                        <input type="text" class="form-control" id="newInsuredOccupation" v-model="person.occupation">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" @click="checkRole('insured')">新增</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--受益人部分(beneficiary)-->
+                <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">受益人</h5>
+                    <div>
+                        <button type="button" class="btn btn-primary me-2">選擇人員</button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#beneficiaryModal">新增人員</button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="">        
+                        <form class="row g-3 p-4">
+                            <div class="col-md-4" v-show="isShow">
+                                <label for="beneficiaryId" class="form-label">ID</label>
+                                <input type="text" class="form-control" id="beneficiaryId" v-model="beneficiary.personId" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="beneficiaryName" class="form-label">姓名</label>
+                                <input type="text" class="form-control" id="beneficiaryName" v-model="beneficiary.name" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="beneficiaryIdNumber" class="form-label">身分證字號</label>
+                                <input type="text" class="form-control" id="beneficiaryIdNumber" v-model="beneficiary.idNumber" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="beneficiaryGender" class="form-label">性別</label>
+                                <input type="text" class="form-control" id="beneficiaryGender" :value="changeGender(beneficiary.gender)" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="beneficiaryBirthDate" class="form-label">生日</label>
+                                <input type="date" class="form-control" id="beneficiaryBirthDate" v-model="beneficiary.birthDate" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="beneficiaryPhone" class="form-label">手機</label>
+                                <input type="text" class="form-control" id="beneficiaryPhone" v-model="beneficiary.phone" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="beneficiaryEmail" class="form-label">信箱</label>
+                                <input type="text" class="form-control" id="beneficiaryEmail" v-model="beneficiary.email" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="beneficiaryAddress" class="form-label">地址</label>
+                                <input type="text" class="form-control" id="beneficiaryAddress" v-model="beneficiary.address" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="beneficiaryOccupation" class="form-label">職業</label>
+                                <input type="text" class="form-control" id="beneficiaryOccupation" v-model="beneficiary.occupation" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">角色</label>
+                                <input type="text" class="form-control" value="受益人" disabled>
+                            </div>
+                            <div class="col-md-4 rightbox">
+                                <button class="btn btn-primary" type="button" id="" @click="">新增</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--受益人Modal-->
+                <div class="modal fade" id="beneficiaryModal" tabindex="-1" aria-labelledby="beneficiaryModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="beneficiaryModalLabel">人員新增</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="newBeneficiaryName" class="form-label">姓名*</label>
+                                        <input type="text" class="form-control" id="newBeneficiaryName" v-model="person.name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newBeneficiaryIdNumber" class="form-label">身分證字號*</label>
+                                        <input type="text" class="form-control" id="newBeneficiaryIdNumber" v-model="person.idNumber">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newBeneficiaryGender" class="form-label">性別</label>
+                                        <select class="form-select" id="newBeneficiaryGender" v-model="person.gender">
+                                            <option selected disabled>Choose...</option>
+                                            <option value="M">男</option>
+                                            <option value="F">女</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newBeneficiaryBirthDate" class="form-label">生日*</label>
+                                        <input type="date" class="form-control" id="newBeneficiaryBirthDate" v-model="person.birthDate">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newBeneficiaryPhone" class="form-label">手機*</label>
+                                        <input type="text" class="form-control" id="newBeneficiaryPhone" v-model="person.phone">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newBeneficiaryEmail" class="form-label">信箱</label>
+                                        <input type="text" class="form-control" id="newBeneficiaryEmail" v-model="person.email">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newBeneficiaryAddress" class="form-label">地址</label>
+                                        <input type="text" class="form-control" id="newBeneficiaryAddress" v-model="person.address">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newBeneficiaryOccupation" class="form-label">職業</label>
+                                        <input type="text" class="form-control" id="newBeneficiaryOccupation" v-model="person.occupation">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" @click="checkRole('beneficiary')">新增</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ 
             </div>
         </div>
-
-
     </div>
 
 </body>
@@ -335,6 +626,52 @@
             endDate:'',
             paymentType:''
         },
+        isShow:false,
+        currentRole:null,
+        person:{
+            name:'',
+            idNumber:'',
+            gender:'',
+            birthDate:'',
+            phone:'',
+            email:'',
+            address:'',
+            occupation:'',
+        },
+        policyHolder:{
+            personId:'',
+            name:'',
+            idNumber:'',
+            gender:'',
+            birthDate:'',
+            phone:'',
+            email:'',
+            address:'',
+            occupation:'',
+        },
+        insured:{
+            personId:'',
+            name:'',
+            idNumber:'',
+            gender:'',
+            birthDate:'',
+            phone:'',
+            email:'',
+            address:'',
+            occupation:'',
+        },
+        beneficiary:{
+            personId:'',
+            name:'',
+            idNumber:'',
+            gender:'',
+            birthDate:'',
+            phone:'',
+            email:'',
+            address:'',
+            occupation:'',
+        },
+
     }
 
     const policyFunctions = {
@@ -383,8 +720,6 @@
         },
         //新增保單-送出
         createPolicyHandler(e){
-            //const vm = this;//保證永遠指向Vue
-
             if(!this.policy.type.typeId || !this.policy.company.companyId || !this.policy.insuredAmount || !this.policy.acceptDate || 
                !this.policy.beginDate || !this.policy.endDate || !this.policy.paymentType){
                 Swal.fire({
@@ -453,18 +788,115 @@
                 paymentType:''
             };
         },
-        //新增被保人角色-送出
-        createInsuredHandler(){
+        //辨別角色
+        checkRole(roleName){
+            this.currentRole = roleName;
+            this.createPersonHandler();
+        },
+        //新增人員
+        createPersonHandler(e){
+            if(!this.person.name || !this.person.idNumber || !this.person.birthDate || !this.person.phone){
+                Swal.fire({
+                    position: "top-end",
+                    width: "25em",
+                    heightAuto: true,
+                    icon: "error",
+                    title: "新增人員失敗",
+                    text: "*為必填欄位，請勿留空！",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return;
+            }
 
+            console.log('送出的person內容：',this.person);
+
+            let jsonDate = JSON.stringify(this.person);
+            let urlString = '/api/v1/policyPerson/register';
+            $.ajax({
+                url:urlString,
+                data:jsonDate,
+                type:'POST',
+                dataType:'json',
+                contentType:'application/json',
+                success:(data,status,xhr) => {
+                    let successMsg = data.message;
+                    console.log(successMsg);
+                    Swal.fire({
+                        position: "top-end",
+                        width: "25em",
+                        heightAuto: true,
+                        icon: "success",
+                        title: successMsg,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    if(this.currentRole === 'policyHolder'){
+                        this.policyHolder = data.data;
+                    }
+                    else if(this.currentRole === 'insured'){
+                        this.insured = data.data;
+                    }
+                    else if(this.currentRole === 'beneficiary'){
+                        this.beneficiary = data.data;
+                    }
+                    this.currentRole = null;
+                    this.resetPerson();
+                },
+                error:(xhr,status,error) => {
+                    let errorMsg = xhr.responseJSON.message;
+                    console.log(errorMsg);
+                    Swal.fire({
+                        position: "top-end",
+                        width: "25em",
+                        heightAuto: true,
+                        icon: "error",
+                        title: "人員新增失敗",
+                        text: errorMsg,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+        },
+        //清除person內容
+        resetPerson(){
+            this.person = {
+                name:'',
+                idNumber:'',
+                gender:'',
+                birthDate:'',
+                phone:'',
+                email:'',
+                address:'',
+                occupation:''
+            };
+        },
+        //改變性別顯示
+        changeGender(genderCode){
+            if(genderCode === 'M'){
+                return '男';
+            }
+            else if(genderCode === 'F'){
+                return '女';
+            }
+            else{
+                return '未指定';
+            }
         },
         //新增投保人角色-送出
         createPolicyHolder(){
+
+        },
+        //新增被保人角色-送出
+        createInsuredHandler(){
 
         },
         //新增受益人角色-送出
         createBeneficiaryHandler(){
 
         },
+        
     }
 
     const policyApp = Vue.createApp({

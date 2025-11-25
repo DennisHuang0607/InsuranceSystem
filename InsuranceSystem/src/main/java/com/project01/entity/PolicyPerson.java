@@ -3,6 +3,7 @@ package com.project01.entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -28,14 +29,14 @@ public class PolicyPerson {
 	@Column(name = "gender",nullable = true)
 	private String gender;
 	@Column(name = "birth_date")
-	private String birthDate;
+	private LocalDate birthDate;
 	@Column(name = "phone")
 	private String phone;
 	@Column(name = "email",nullable = true)
 	private String email;
 	@Column(name = "address",nullable = true)
 	private String address;
-	@Column(name = "occuption",nullable = true)
+	@Column(name = "occupation",nullable = true)
 	private String occupation;
 	@OneToMany(mappedBy = "person",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<PolicyPersonRole> roles;
@@ -64,10 +65,10 @@ public class PolicyPerson {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public String getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
-	public void setBirthDate(String birthDate) {
+	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 	public String getPhone() {
