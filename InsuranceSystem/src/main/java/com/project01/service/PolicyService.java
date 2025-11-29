@@ -99,7 +99,7 @@ public class PolicyService {
 	
 	//新增Policy及所有相關角色
 	@Transactional
-    public ResponseEntity<ResponseDTO<Policy>> registerPolicyWithRoles(PolicyAndRolesDTO request) {
+    public ResponseEntity<ResponseDTO<Policy>> registerPolicyAndRoles(PolicyAndRolesDTO request) {
         try {
         	//取得policy及產生policyNumber
             Policy policy = request.getPolicy();
@@ -114,10 +114,10 @@ public class PolicyService {
                 policyPersonRoleService.registerRole(newPolicyId,role.getPersonId(),role.getRole());
             }
 
-            ResponseDTO<Policy> response = new ResponseDTO<>(200,"保單及角色新增成功",newPolicy);
+            ResponseDTO<Policy> response = new ResponseDTO<>(200,"保單&角色新增成功",newPolicy);
             return ResponseEntity.ok(response);
         } catch(Exception e) {
-            ResponseDTO<Policy> response = new ResponseDTO<>(500, "保單/角色新增失敗，系統異常了",null);
+            ResponseDTO<Policy> response = new ResponseDTO<>(500, "保單&角色新增失敗，系統異常了",null);
             return ResponseEntity.status(500).body(response);
         }
     }

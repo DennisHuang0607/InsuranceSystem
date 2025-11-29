@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project01.dto.ResponseDTO;
 import com.project01.entity.PolicyPerson;
+import com.project01.repository.PolicyPersonRepository;
 import com.project01.service.PolicyPersonService;
 
 @RestController
@@ -26,6 +27,8 @@ public class PolicyPersonController {
 	
 	@Autowired
 	private PolicyPersonService policyPersonService;
+	@Autowired
+	private PolicyPersonRepository policyPersonRepository;
 	
 	public PolicyPersonController() {
 		logger.info("PolicyPerson Controller 已配置...");
@@ -39,6 +42,11 @@ public class PolicyPersonController {
 	@GetMapping(path = "/findAll",produces = "application/json")
 	public ResponseEntity<ResponseDTO<List<PolicyPerson>>> findAllPolicyPersonController(){
 		return policyPersonService.findAllPolicyPerson();
+	}
+	
+	@GetMapping(path = "/showAll",produces = "application/json")
+	public List<PolicyPerson> showAllPolicyPersonController(){
+		return policyPersonRepository.findAll();
 	}
 	
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")

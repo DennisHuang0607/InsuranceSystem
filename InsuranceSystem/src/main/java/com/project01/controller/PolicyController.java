@@ -38,9 +38,9 @@ public class PolicyController {
 		return policyService.registerPolicy(policy);
 	}
 	
-	@PostMapping(path = "/registerWithRoles",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<ResponseDTO<Policy>> registerPolicyWithRolesController(@RequestBody PolicyAndRolesDTO request){
-		return policyService.registerPolicyWithRoles(request);
+	@PostMapping(path = "/registerP&R",consumes = "application/json",produces = "application/json")
+	public ResponseEntity<ResponseDTO<Policy>> registerPolicyAndRolesController(@RequestBody PolicyAndRolesDTO request){
+		return policyService.registerPolicyAndRoles(request);
 	}
 	
 	@GetMapping(path = "/findAll",produces = "application/json")
