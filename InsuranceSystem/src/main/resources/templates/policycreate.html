@@ -722,15 +722,15 @@
         personData:[],
         checkedPerson:null,
         policyHolderRole:{
-            person:null,
+            personId:null,
             role:'投保人',
         },
         insuredRole:{
-            person:null,
+            personId:null,
             role:'被保人',
         },
         beneficiaryRole:{
-            person:null,
+            personId:null,
             role:'受益人',
         },
         request:{
@@ -843,10 +843,11 @@
         },
         //清除policy內容
         resetPolicy(){
+            let insurerCache = this.policy.insurer;
             this.policy = {
                 type:{},
                 company:{},
-                insurer: this.policy.insurer,
+                insurer: insurerCache,
                 insuredAmount:'',
                 acceptDate:'',
                 beginDate:'',
@@ -963,6 +964,7 @@
         //辨別角色二
         checkRoleTwo(roleName){
             this.currentRole = roleName;
+            this.checkedPerson = null;
             console.log(roleName);
             $.getJSON('/api/v1/policyPerson/showAll', (data)=>{
                 this.personData = data;
@@ -979,10 +981,12 @@
             else if(this.currentRole === 'beneficiary'){
                 this.beneficiary = this.checkedPerson;
             }
-            this.checkedPerson = null;
+            this.currentRole = null;
         },
         //保單與角色新增
         createPolicyAndRoles(e){
+            this.resetRoles();
+
             if(!this.policy.type.typeId || !this.policy.company.companyId || !this.policy.insuredAmount || !this.policy.acceptDate || 
                !this.policy.beginDate || !this.policy.endDate || !this.policy.paymentType){
                 Swal.fire({
@@ -1041,8 +1045,10 @@
             this.roles.push(this.policyHolderRole);
             this.roles.push(this.insuredRole);
             this.roles.push(this.beneficiaryRole);
-            this.request.policy = this.policy;
-            this.request.policyRoles = this.roles;
+            this.request.policy = JSON.parse(JSON.stringify(this.policy));
+            this.request.policyRoles = JSON.parse(JSON.stringify(this.roles));
+            // this.request.policy = this.policy;
+            // this.request.policyRoles = this.roles;
             console.log('要送出的保單&角色',this.request);
 
             let jsonData = JSON.stringify(this.request);
@@ -1066,7 +1072,6 @@
                         timer: 1500
                     });
                     this.resetPolicy();
-                    this.restRoles();
                 },
                 error:(xhr,status,error) => {
                     let errorMsg = xhr.responseJSON.message;
@@ -1087,12 +1092,22 @@
         },
         //policyHolderRole、insuredRole、beneficiaryRole接收人員資料
         createRole(){
-            this.policyHolderRole.person = this.policyHolder;
-            this.insuredRole.person = this.insured;
-            this.beneficiaryRole.person = this.beneficiary;
+            this.policyHolderRole.personId = this.policyHolder.personId;
+            this.insuredRole.personId = this.insured.personId;
+            this.beneficiaryRole.personId = this.beneficiary.personId;
         },
-        //清空polciyHolder、insured、beneficiary
-        restRoles(){
+        //清空polciyHolder、insured、beneficiary、Role、roles
+        resetRoles(){
+            this.roles = [];
+            this.policyHolderRole = {
+                personId:null,
+            };
+            this.insuredRole = {
+                personId:null,
+            };
+            this.beneficiaryRole = {
+                personId:null,
+            };
             this.policyHolder = {
                 personId:'',
                 name:'',

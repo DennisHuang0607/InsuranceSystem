@@ -1,5 +1,7 @@
 package com.project01.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,9 +14,11 @@ public class PolicyPersonRole {
     private int id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "policy_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Policy policy;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "roles"})
     private PolicyPerson person;
     @Column(name = "role")
     private String role;
