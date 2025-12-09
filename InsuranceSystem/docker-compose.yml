@@ -1,0 +1,54 @@
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SA_PASSWORD}"
+      # 建議新增這行，以明確確保啟用混合模式 (Windows/SQL Server 驗證)
+      MSSQL_AUTHENTICATION_MODE: "SQL"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    
+
+  db_init:
+    image: mcr.microsoft.com/mssql-tools
+    # 增加這個 environment 區塊！
+    environment:
+      SA_PASSWORD: "${SA_PASSWORD}"
+
+    depends_on:
+      mssql:
+        condition: service_started # <-- 從 service_healthy 改為 service_started
+    volumes:
+      - ./init-db.sql:/init-db.sql
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        # 移除 $$，改為 $
+        until /opt/mssql-tools/bin/sqlcmd -S mssql -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" 2>/dev/null; do sleep 1; done
+        echo "Running init SQL..."
+        /opt/mssql-tools/bin/sqlcmd -S mssql -U sa -P "$$SA_PASSWORD" -i /init-db.sql
+    restart: "no"  # 單次任務，完成後不再重啟
+
+  backend:
+    build: .
+    container_name: policy-app
+    depends_on:
+      mssql:
+         condition: service_started # <-- 從 service_healthy 改為 service_started
+      db_init:
+         condition: service_completed_successfully # 確保資料庫結構已初始化
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://mssql:1433;databaseName=insurancesystem;encrypt=true;trustServerCertificate=true
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: "${SA_PASSWORD}"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  mssql_data:

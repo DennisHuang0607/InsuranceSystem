@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>保單類型清單</title>
+    <title>保險公司清單</title>
 
     <!--bootstrap CSS-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
@@ -113,14 +113,14 @@
             </div>
         </div>
 
-        <!--保單類型清單-->
+        <!--保險公司清單-->
         <div class="container mt-5">
             <div class="card shadow mx-auto table-container">
                 <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0">保單類型清單</h5>
+                    <h5 class="mb-0">保險公司清單</h5>
                     <div>
-                        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal" v-bind:disabled="!selectedType" @click="editHandler">編輯</button>
-                        <button type="button" class="btn btn-danger" v-bind:disabled="!selectedType" @click="deleteHandler">刪除</button>
+                        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal" v-bind:disabled="!selectedCompany" v-on:click="editHandler">編輯</button>
+                        <button type="button" class="btn btn-danger" v-bind:disabled="!selectedCompany" @click="deleteHandler">刪除</button>
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -130,18 +130,20 @@
                                 <tr>
                                     <th></th>
                                     <th class="fs-5 fw-bold" v-show="isShow">編號</th>
-                                    <th class="fs-5 fw-bold">保單類型</th>
-                                    <th class="fs-5 fw-bold">描述</th>
+                                    <th class="fs-5 fw-bold">公司名稱</th>
+                                    <th class="fs-5 fw-bold">地址</th>
+                                    <th class="fs-5 fw-bold">電話</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="item in typeData">
+                                <tr v-for="item in companyData">
                                     <td>
-                                        <input type="checkbox" v-bind:checked="selectedType && selectedType.typeId === item.typeId" v-on:change="selectType(item)">
+                                        <input type="checkbox" v-bind:checked="selectedCompany && selectedCompany.companyId === item.companyId" v-on:change="selectCompany(item)">
                                     </td>
-                                    <td v-show="isShow">{{item.typeId}}</td>
-                                    <td>{{item.typeName}}</td>
-                                    <td>{{item.description}}</td>
+                                    <td v-show="isShow">{{item.companyId}}</td>
+                                    <td>{{item.companyName}}</td>
+                                    <td>{{item.address}}</td>
+                                    <td>{{item.telephone}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -150,23 +152,27 @@
             </div>
         </div>
 
-        <!--保單類型編輯Modal-->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editTypeModalLabel" aria-hidden="true">
+        <!--保險公司編輯Modal-->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editTypeModalLabel">修改保單類型資料</h5>
+                        <h5 class="modal-title" id="editCompanyModalLabel">修改保險公司資料</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" v-if="selectedType">
+                    <div class="modal-body" v-if="selectedCompany">
                         <form>
                             <div class="mb-3">
-                                <label for="typeName" class="form-label">保單類型*</label>
-                                <input type="text" class="form-control" id="typeName" v-model="updateType.typeName">
+                                <label for="companyName" class="form-label">公司名稱*</label>
+                                <input type="text" class="form-control" id="companyName" v-model="updateCompany.companyName">
                             </div>
                             <div class="mb-3">
-                                <label for="description" class="form-label">描述</label>
-                                <input type="text" class="form-control" id="description" v-model="updateType.description">
+                                <label for="companyAddress" class="form-label">地址</label>
+                                <input type="text" class="form-control" id="companyAddress" v-model="updateCompany.address">
+                            </div>
+                            <div class="mb-3">
+                                <label for="companyTelephone" class="form-label">電話</label>
+                                <input type="text" class="form-control" id="companyTelephone" v-model="updateCompany.telephone">
                             </div>
                         </form>
                         <div id="resultMsg"></div>
@@ -186,10 +192,10 @@
 <script>
 
     const dataModel = {
-        typeData:[],
-        selectedType:null,
-        updateType:{},
-        deleteType:{},
+        companyData:[],
+        selectedCompany:null,
+        updateCompany:{},
+        deleteCompany:{},
         isShow:false,
         newCompany: {
             companyName:'',
@@ -203,47 +209,47 @@
     }
     const functions = {
         //後端撈資料
-        fetchTypes(){
-            $.getJSON('/api/v1/insuranceType/showAll', (data)=>{
-                this.typeData = data;
+        fetchCompanies(){
+            $.getJSON('/api/v1/insuranceCompany/showAll', (data)=>{
+                this.companyData = data;
             });
         },
         //取消勾選
-        selectType(item){
-            if(this.selectedType && this.selectedType.typeId === item.typeId){
-                this.selectedType = null;
+        selectCompany(item){
+            if(this.selectedCompany && this.selectedCompany.companyId === item.companyId){
+                this.selectedCompany = null;
             }
             else{
-                this.selectedType = item;
+                this.selectedCompany = item;
             }
         },
-        //編輯保單類型
+        //編輯保險公司
         editHandler(e){
-            console.log("要編輯的保單類型",this.selectedType);
-
-            this.updateType = JSON.parse(JSON.stringify(this.selectedType));
+            console.log("要編輯的公司資料:",this.selectedCompany);
             $('#resultMsg').text('');
             
-            $('#saveButton').off('click').on('click',() => {
-                if(!this.updateType.typeName.trim()){
-                    $('#resultMsg').text('保單類型為必填欄位，請勿留空！');
+            this.updateCompany = JSON.parse(JSON.stringify(this.selectedCompany));
+            $('#saveButton').off('click').on('click', () => {
+
+                if(!this.updateCompany.companyName.trim()){
+                    $('#resultMsg').text("公司名稱為必填欄位，請勿留空！");
                     return;
                 }
 
-                let jsonData = JSON.stringify(this.updateType);
-                let urlString = '/api/v1/insuranceType/update';
+                let urlString = '/api/v1/insuranceCompany/update';
+                let jsonData = JSON.stringify(this.updateCompany);
                 $.ajax({
-                    data:jsonData,
                     url:urlString,
                     type:'PUT',
-                    dataType:'JSON',
+                    data:jsonData,
+                    dataType:'json',
                     contentType:'application/json',
                     success:(data,status,xhr) => {
                         console.log(data);
                         successMsg = data.message;
                         $('#resultMsg').text(successMsg);
-                        this.selectedType = this.updateType;
-                        this.fetchTypes();
+                        this.fetchCompanies();
+                        this.selectedCompany = this.updateCompany;
                     },
                     error:(xhr,status,error) => {
                         errorMsg = xhr.responseJSON.message;
@@ -251,18 +257,20 @@
                         $('#resultMsg').text(errorMsg);
                     }
                 })
+
             })
+
         },
-        //刪除保單類型
+        //刪除保險公司
         deleteHandler(e){
-            console.log("要刪除的保單類型",this.selectedType);
+            console.log("要刪除的公司資料:",this.selectedCompany);
             $('#resultMsg').text('');
 
-            this.deleteType = this.selectedType;
+            this.deleteCompany = this.selectedCompany;
 
             Swal.fire({
                     title: "確定刪除嗎？",
-                    text: "刪除保單類型：" + this.deleteType.typeName,
+                    text: "刪除保險公司：" + this.deleteCompany.companyName,
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
@@ -272,7 +280,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         console.log("刪除作業");
-                        let urlString = '/api/v1/insuranceType/delete/' + this.deleteType.typeId;
+                        let urlString = '/api/v1/insuranceCompany/delete/' + this.deleteCompany.companyId;
                         $.ajax({
                             url:urlString,
                             type:'DELETE',
@@ -283,12 +291,12 @@
                                     width: "25em",
                                     heightAuto: true,
                                     icon: "success",
-                                    title: "保單類型刪除成功",
+                                    title: "保險公司刪除成功",
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
-                                this.fetchTypes();
-                                this.selectedType = null;
+                                this.fetchCompanies();
+                                this.selectedCompany = null;
                             },
                             error:(xhr,status,error) => {
                                 let errorMsg = xhr.responseJSON.message;
@@ -297,7 +305,7 @@
                                     width: "25em",
                                     heightAuto: true,
                                     icon: "error",
-                                    title: "保單類型刪除失敗",
+                                    title: "保險公司刪除失敗",
                                     text: errorMsg,
                                     showConfirmButton: false,
                                     timer: 1500
@@ -328,6 +336,7 @@
                     console.log(data);
                     let successMsg = data.message;
                     $('#resultMsgCompany').text(successMsg)
+                    this.fetchCompanies();
                 },
                 error:(xhr,status,error) => {
                     let errorMsg=xhr.responseJSON;
@@ -365,7 +374,6 @@
                     console.log(data);
                     let successMsg = data.message;
                     $('#resultMsgType').text(successMsg);
-                    this.fetchTypes();
                 },
                 error:(xhr,status,error) => {
                     let errorMsg = xhr.responseJSON.message;
@@ -382,7 +390,7 @@
             };
             $('#resultMsgType').text('');
         },
-
+        
     }
     const app = Vue.createApp({
         data(){
@@ -390,7 +398,7 @@
         },
         methods:functions,
         mounted(){
-            this.fetchTypes();//頁面第一次載入時，向後端撈資料
+            this.fetchCompanies();//頁面第一次載入時，向後端撈資料
         }
 
     }).mount('#app');

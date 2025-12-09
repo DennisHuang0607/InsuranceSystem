@@ -86,7 +86,8 @@ public class SecurityConfig {
 					.disable())
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/insurancesystem/home/**","/insurancesystem/*/login/**","/css/**","/vue/**","/sweetaert/**").permitAll()
-					.requestMatchers("/insurer/page/**","/insuranceCompany/page/**","/insuranceType/page/**","/policyPerson/page/**","/policy/page/**","/api/**").hasRole("USER")
+					.requestMatchers("/insurer/page/**","/insuranceCompany/page/**","/insuranceType/page/**","/policyPerson/page/**","/policy/page/**","/api/v1/policy/**","/api/v1/insuranceCompany/**","/api/v1/insuranceType/**","/api/v1/policyPerson/**","/api/v1/policyPersonRole/**").hasRole("USER")
+					.requestMatchers("/api/v1/insurer/**","/api/v1/admin/**").hasAnyRole("USER", "ADMIN")
 					.anyRequest().authenticated()
 					)
 			.formLogin(form -> form

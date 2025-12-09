@@ -1,0 +1,5 @@
+com\project01\service\AdminServiceTests.class
+com\project01\repository\AdminRepositoryTests.class
+com\project01\repository\InsuranceCompanyRepositoryTests.class
+com\project01\repository\InsurerRepositoryTests.class
+com\project01\insurancesystem\InsuranceSystemApplicationTests.class

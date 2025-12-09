@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保險員列表</title>
+
+    <!--jQuery UI核心-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!--bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!--bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <!--動態參考Vue3.0-->
+    <script th:src="@{/vue/vue.global.js}"></script>
+    <!--動態參考Sweetalert2-->
+    <script th:src="@{/sweetalert/sweetalert2.min.js}"></script>
+    <!--SweetAlert2載入-->
+    <link rel="stylesheet" th:href="@{/css/sweetalert2.min.css}">
+
+    <script th:inline="javascript">
+        var insurers = /*[[${insurers}]]*/ [];
+    </script>
+
+    <style>
+        /* 自訂表格外框大小 */
+        .table-container {
+            width: 80%;        /* 區塊寬度佔畫面80% */
+            max-width: 1000px; /* 限制最大寬度 */
+            overflow-y: auto;  /* 超出高度時出現垂直卷軸 */
+        }
+
+        .rightbox {
+            text-align: right; /* 設置文字靠右對齊 */
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <fieldset>
+        <!-- Bootstrap Dropdown 功能選單 -->
+        <div class="dropdown rightbox">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                管理員功能
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <!-- 用 data-bs-toggle 直接觸發 Modal -->
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createAdminModal">管理員新增</a></li>
+                <li><a class="dropdown-item" href="/admin/page/adminshowall">管理員列表</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createInsurerModal">保險員新增</a></li>
+                <li><a class="dropdown-item" href="/admin/page/insurershowall">保險員列表</a></li>
+            </ul>
+        </div>
+
+        <!-- Bootstrap Modal (管理員新增) -->
+        <div class="modal fade" id="createAdminModal" tabindex="-1" aria-labelledby="createAdminModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createAdminModalLabel">管理員新增</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="createAdminName" class="form-label">中文姓名</label>
+                                <input type="text" class="form-control" id="createAdminName">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createAdminAccountId" class="form-label">帳號</label>
+                                <input type="text" class="form-control" id="createAdminAccountId">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createAdminPassword" class="form-label">密碼</label>
+                                <input type="password" class="form-control" id="createAdminPassword">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createAdminEmail" class="form-label">信箱</label>
+                                <input type="text" class="form-control" id="createAdminEmail">
+                            </div>
+                        </form>
+                        <div id="resultMsgAdmin"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="submitAdmin">新增</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap Modal (保險員新增) -->
+        <div class="modal fade" id="createInsurerModal" tabindex="-1" aria-labelledby="createInsurerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createInsurerModalLabel">保險員新增</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="createInsurerName" class="form-label">中文姓名</label>
+                                <input type="text" class="form-control" id="createInsurerName">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createInsurerAccountId" class="form-label">帳號</label>
+                                <input type="text" class="form-control" id="createInsurerAccountId">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createInsurerPassword" class="form-label">密碼</label>
+                                <input type="password" class="form-control" id="createInsurerPassword">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createInsurerPhone" class="form-label">手機</label>
+                                <input type="text" class="form-control" id="createInsurerPhone">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createInsurerEmail" class="form-label">信箱</label>
+                                <input type="text" class="form-control" id="createInsurerEmail">
+                            </div>
+                        </form>
+                        <div id="resultMsgInsurer"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="submitInsurer">新增</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <!--保險員列表-->
+    <div class="container mt-5" id="app">
+        <div class="card shadow mx-auto table-container">
+            <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                <h5 class="mb-0">保險員列表</h5>
+                <div>
+                    <button type="button" class="btn btn-primary me-2" data-bs-target="#editModal" data-bs-toggle="modal" v-bind:disabled="!selectedInsurer" v-on:click="editHandler">編輯</button>
+                    <button type="button" class="btn btn-danger" v-bind:disabled="!selectedInsurer" @click="deleteHandler">刪除</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th></th>
+                                <th class="fs-5 fw-bold">編號</th>
+                                <th class="fs-5 fw-bold">姓名</th>
+                                <th class="fs-5 fw-bold">帳號</th>
+                                <th class="fs-5 fw-bold">電話</th>
+                                <th class="fs-5 fw-bold">信箱</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="insurer in insurerData" v-bind:key="insurer.accountId">
+                                <td>
+                                    <input type="checkbox" v-bind:id="'checkbox-'+insurer.accountId" v-bind:value="insurer.accountId" v-bind:checked="selectedInsurer && selectedInsurer.accountId === insurer.accountId" v-on:change="selectInsurer(insurer)">
+                                </td>
+                                <td>{{insurer.insurerId}}</td>
+                                <td>{{insurer.name}}</td>
+                                <td>{{insurer.accountId}}</td>
+                                <td>{{insurer.phone}}</td>
+                                <td>{{insurer.email}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--保險員編輯Modal-->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editInsurerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editInsurerModalLabel">修改保險員資料</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body" v-if="selectedInsurer">
+                        <form>
+                            <div class="mb-3">
+                                <label for="insurerName" class="form-label">中文姓名</label>
+                                <input type="text" class="form-control" id="insurerName" v-model="updateInsurer.name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="insurerAccountId" class="form-label">帳號</label>
+                                <input type="text" class="form-control" id="insurerAccountId" v-model="updateInsurer.accountId" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="insurerPassword" class="form-label">密碼</label>
+                                <input type="password" class="form-control" id="insurerPassword">
+                            </div>
+                            <div class="mb-3">
+                                <label for="insurerPhone" class="form-label">手機</label>
+                                <input type="text" class="form-control" id="insurerPhone" v-model="updateInsurer.phone">
+                            </div>
+                            <div class="mb-3">
+                                <label for="insurerEmail" class="form-label">信箱</label>
+                                <input type="text" class="form-control" id="insurerEmail" v-model="updateInsurer.email">
+                            </div>
+                        </form>
+                        <div id="resultMsg"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveButton">儲存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    
+
+    <script>
+
+        //管理員新增jQuery
+        $('#submitAdmin').on('click',function(){
+            let adminName = $('#createAdminName').val().trim();
+            let adminAccountId = $('#createAdminAccountId').val().trim();
+            let adminPassword = $('#createAdminPassword').val().trim();
+            let adminEmail = $('#createAdminEmail').val().trim();
+
+            if(!adminName || !adminAccountId || !adminPassword || !adminEmail){
+                $('#resultMsgAdmin').text("所有欄位皆為必填，請勿留空！");
+                return;
+            }
+
+            let admin={
+                name:adminName,
+                accountId:adminAccountId,
+                password:adminPassword,
+                email:adminEmail
+            };
+            let urlString='/api/v1/admin/register';
+            let jsonDate=JSON.stringify(admin);
+
+            $.ajax({
+                url:urlString,
+                type:'POST',
+                dataType:'json',
+                data:jsonDate,
+                contentType:'application/json',
+                beforeSend:function(xhr){
+                    xhr.setRequestHeader("Content-Type","application/json");
+                },
+                success:function(data,status,xhr){
+                    console.log(data);
+                    let successMsg=data.message;
+                    $('#resultMsgAdmin').text(successMsg);
+                },
+                error:function(xhr,status,error){
+                    let errorMsg=xhr.responseJSON;
+                    console.log(errorMsg);
+                    $('#resultMsgAdmin').text(errorMsg.message);
+                }
+            })
+        })
+        //當Modal關閉，會將欄位資料清空
+        //'hidden.bs.modal'是Bootstrap event，modal隱藏完成(transition結束)後會觸發
+        $('#createAdminModal').on('hidden.bs.modal', function () {
+            $('#createAdminName').val('');
+            $('#createAdminAccountId').val('');
+            $('#createAdminPassword').val('');
+            $('#createAdminEmail').val('');
+            $('#resultMsgAdmin').text('');
+        });
+
+        //保險員新增jQuery
+        $('#submitInsurer').click(function(){   
+            let insurerName = $('#createInsurerName').val().trim();
+            let insurerAccountId = $('#createInsurerAccountId').val().trim();
+            let insurerPassword = $('#createInsurerPassword').val().trim();
+            let insurerPhone = $('#createInsurerPhone').val().trim();
+            let insurerEmail = $('#createInsurerEmail').val().trim();
+
+            // !""會被當作true
+            if(!insurerName || !insurerAccountId || !insurerPassword || !insurerPhone || !insurerEmail){
+                $('#resultMsgInsurer').text("所有欄位皆為必填，請勿留空！");
+                return;
+            }
+
+            let insurer={
+                name:insurerName,
+                accountId:insurerAccountId,
+                password:insurerPassword,
+                phone:insurerPhone,
+                email:insurerEmail
+            }
+            let urlString = '/api/v1/insurer/register';
+            let jsonDate = JSON.stringify(insurer);
+
+            $.ajax({
+                url:urlString,
+                type:'POST',                
+                data:jsonDate,
+                dataType:'json',
+                contentType:'application/json',
+                beforeSend:function(xhr){
+                    xhr.setRequestHeader("Content-Type","application/json");
+                },
+                success:function(data,status,xhr){
+                    console.log(data);
+                    let successMsg = data.message;
+                    $('#resultMsgInsurer').text(successMsg);
+                    
+                    //刷新當前頁，更新列表資訊
+                    window.location.replace(window.location.href);
+                },
+                error:function(xhr,status,error){
+                    let errorMsg = xhr.responseJSON;
+                    console.log(errorMsg);
+                    $('#resultMsgInsurer').text(errorMsg.message);
+                }
+            });
+        });
+
+        $('#createInsurerModal').on('hidden.bs.modal', function () {
+            $('#createInsurerName').val('');
+            $('#createInsurerAccountId').val('');
+            $('#createInsurerPassword').val('');
+            $('#createInsurerPhone').val('');
+            $('#createInsurerEmail').val('');
+            $('#resultMsgInsurer').text('');
+        });
+
+        //保險員編輯刪除jQuery/Vue
+        const dataModel = {
+            insurerData:insurers,
+            selectedInsurer:null,
+            updateInsurer:{},
+            deleteInsurer:{},
+        }
+        const functions = {
+
+            //取消勾選
+            selectInsurer(insurer){
+                if(this.selectedInsurer && this.selectedInsurer.accountId === insurer.accountId){
+                    this.selectedInsurer = null;
+                }
+                else{
+                    this.selectedInsurer = insurer;
+                }
+            },
+
+            //編輯
+            editHandler(e){
+                console.log("要編輯的帳號:" , this.selectedInsurer.accountId);
+                console.log("要編輯的資料：", this.selectedInsurer);
+                $('#resultMsg').text('');
+
+                this.updateInsurer = JSON.parse(JSON.stringify(this.selectedInsurer));
+                $('#saveButton').off('click').on('click', () => {
+                    let urlString = '/api/v1/insurer/update';
+                    let jsonData = JSON.stringify(this.updateInsurer);
+                    $.ajax({
+                        url:urlString,
+                        type:'PUT',
+                        data:jsonData,
+                        contentType:'application/json',
+                        success:(data,status,xhr) => {
+                            console.log(data);
+                            let successMsg = data.message;
+                            $('#resultMsg').text(successMsg);
+                            //將編輯後的資料覆蓋回去
+                            let index = this.insurerData.findIndex(i => i.accountId === this.updateInsurer.accountId);
+                            this.insurerData[index] = JSON.parse(JSON.stringify(this.updateInsurer));
+                            //同步更新selectedInsurer
+                            this.selectedInsurer = this.insurerData[index];
+                        },
+                        error:(xhr,status,error) => {
+                            let errorMsg = xhr.responseJSON;
+                            console.log(errorMsg);
+                            $('#resultMsg').text(errorMsg);
+                        }
+                    })
+
+                })
+            },
+
+            //刪除
+            deleteHandler(e){
+                console.log("要刪除的帳號" , this.selectedInsurer.accountId);
+                console.log("要刪除的資料：", this.selectedInsurer);
+                $('#resultMsg').text('');
+
+                let index = this.insurerData.findIndex(i => i.accountId === this.selectedInsurer.accountId);
+                this.updateInsurer = this.insurerData[index];
+
+                Swal.fire({
+                    title: "確定刪除嗎？",
+                    text: "刪除保險員帳號：" + this.updateInsurer.accountId,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "刪除",
+                    cancelButtonColor: "#d33",
+                    cancelButtonText:"取消",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log("刪除作業");
+                        let urlString = '/api/v1/insurer/delete/' + this.updateInsurer.accountId;
+                        $.ajax({
+                            url:urlString,
+                            type:'DELETE',
+                            success:(data,status,xhr) => {
+                                console.log(data);
+                                Swal.fire({
+                                    position: "top-end",
+                                    width: "25em",
+                                    heightAuto: true,
+                                    icon: "success",
+                                    title: "保險員刪除成功",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                this.insurerData.splice(index,1);
+                                this.selectedInsurer = null;
+                            },
+                            error:(xhr,status,error) => {
+                                let errorMsg = xhr.responseJSON;
+                                Swal.fire({
+                                    position: "top-end",
+                                    width: "25em",
+                                    heightAuto: true,
+                                    icon: "error",
+                                    title: "保險員刪除失敗",
+                                    text: errorMsg.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        });
+                        
+                    }
+                });
+
+            }
+
+        }
+        const app = Vue.createApp({
+            data(){
+                return dataModel;
+            },
+            methods:functions,
+        }).mount('#app')
+
+
+    </script>
+
+</body>
+</html>

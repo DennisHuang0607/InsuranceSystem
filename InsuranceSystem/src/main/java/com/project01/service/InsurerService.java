@@ -3,6 +3,8 @@ package com.project01.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class InsurerService {
+	private static final Logger logger = LoggerFactory.getLogger(PolicyService.class);
 
 	@Autowired
 	private InsurerRepository insurerRepository;
@@ -42,6 +45,7 @@ public class InsurerService {
 			}
 		}
 		catch (Exception e){
+			logger.error("管理員新增失敗，後端發生異常:",e);
 			ResponseDTO<Insurer> response = new ResponseDTO<>(500,"管理員新增失敗，系統異常了",null);
 			return ResponseEntity.status(500).body(response);
 		}

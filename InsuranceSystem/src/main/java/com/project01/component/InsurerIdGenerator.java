@@ -14,7 +14,7 @@ public class InsurerIdGenerator implements IdentifierGenerator{
         try {
             String prefix = "INS";
 
-            String hql = "SELECT i.insurer_id FROM Insurer i ORDER BY i.insurerId DESC";
+            String hql = "SELECT i.insurerId FROM Insurer i ORDER BY i.insurerId DESC";
             List<String> result = session.createQuery(hql,String.class).setMaxResults(1).getResultList();
 
             String lastId = result.isEmpty() ? null : result.get(0);

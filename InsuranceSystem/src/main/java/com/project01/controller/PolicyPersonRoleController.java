@@ -30,11 +30,11 @@ public class PolicyPersonRoleController {
 	public ResponseEntity<ResponseDTO<PolicyPersonRole>> registerRoleController(@RequestBody int policyId, @RequestBody int personId, @RequestBody String role){
 		try {
 			PolicyPersonRole newRole = policyPersonRoleService.registerRole(policyId, personId, role);
-			ResponseDTO<PolicyPersonRole> response = new ResponseDTO<PolicyPersonRole>(200,"",newRole);
+			ResponseDTO<PolicyPersonRole> response = new ResponseDTO<PolicyPersonRole>(200,"新增保單角色成功",newRole);
 			return ResponseEntity.ok(response);
 		}
 		catch(Exception e) {
-			ResponseDTO<PolicyPersonRole> response = new ResponseDTO<>(500, "", null);
+			ResponseDTO<PolicyPersonRole> response = new ResponseDTO<>(500,"新增保單角色失敗", null);
 			return  ResponseEntity.status(500).body(response);
 		}
 	}
