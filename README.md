@@ -76,11 +76,11 @@ B.到https://github.com/DennisHuang0607/InsuranceSystem.git，下載專案並解
 
 C.設定環境變數：在專案根目錄建立.env檔案，並設定資料庫密碼(大寫+小寫+數字+特殊符號+至少八個字元)->SA\_PASSWORD=*你的密碼*
 
-D.打包專案：./mvnw clean package -DskipTests
+D.打包專案：./mvnw clean package -DskipTests (請透過Windows PowerShell執行)
 
 E.準備JAR檔：進入target資料夾，將生成的jar檔重新命名為insurancesystem.jar
 
-F.啟動容器：docker-compose up -d
+F.啟動容器：docker-compose up -d (請透過Windows PowerShell執行)
 
 G.訪問系統：首頁->http://localhost:8080/insurancesystem/home，資料庫連接埠->3306
 
