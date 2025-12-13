@@ -1,7 +1,5 @@
 專案介紹
 
--------------
-
 1\.嚴謹的權限控管：
 
 區分管理員與保險員雙重角色
@@ -26,11 +24,9 @@
 
 實作@Transactional交易管理，確保多表寫入時的原子性
 
-
+-------------
 
 後端技術
-
--------------
 
 核心框架：Spring Boot
 
@@ -48,33 +44,27 @@ API設計：RESTful
 
 依賴管理：Maven
 
-
+-------------
 
 前端技術
-
--------------
 
 核心邏輯：Vue、JQuery、AJAX
 
 互動元件：SweetAlert
 
-UI框架：Bootstrap
-
-
-
-維運與部署
+UI框架：Bootstrap\
 
 ----------------
+
+維運與部署
 
 版本控制：Git
 
 容器化：Docker、Docker Compose
 
-
+-------------
 
 啟動方式
-
--------------
 
 前置需求：
 
@@ -86,11 +76,11 @@ B.到https://github.com/DennisHuang0607/InsuranceSystem.git，下載專案並解
 
 C.設定環境變數：在專案根目錄建立.env檔案，並設定資料庫密碼(大寫+小寫+數字+特殊符號+至少八個字元)->SA\_PASSWORD=*你的密碼*
 
-D.打包專案：./mvnw clean package -DskipTests
+D.打包專案：./mvnw clean package -DskipTests (請透過Windows PowerShell執行)
 
 E.準備JAR檔：進入target資料夾，將生成的jar檔重新命名為insurancesystem.jar
 
-F.啟動容器：docker-compose up -d
+F.啟動容器：docker-compose up -d (請透過Windows PowerShell執行)
 
 G.訪問系統：首頁->http://localhost:8080/insurancesystem/home，資料庫連接埠->3306
 
