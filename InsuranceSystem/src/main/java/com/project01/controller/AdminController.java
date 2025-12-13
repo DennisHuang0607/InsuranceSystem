@@ -1,5 +1,7 @@
 package com.project01.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project01.dto.ResponseDTO;
 import com.project01.entity.Admin;
 import com.project01.entity.Message;
 import com.project01.service.AdminService;
@@ -34,33 +37,29 @@ public class AdminController {
 	
 	//新增管理員
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Message> registerAdminController(@RequestBody Admin admin) {
-		ResponseEntity<Message> response = adminService.registerAdmin(admin);
-
+	public ResponseEntity<ResponseDTO<Admin>> registerAdminController(@RequestBody Admin admin) {
+		ResponseEntity<ResponseDTO<Admin>> response = adminService.registerAdmin(admin);
 		return response;
 	}
 	
 	//查詢所有管理員
 	@GetMapping(path = "/findall",produces = "application/json")
-	public ResponseEntity<Message> findAllAdminController(){
-		ResponseEntity<Message> response = adminService.findAllAdmin();
-		
+	public ResponseEntity<ResponseDTO<List<Admin>>> findAllAdminController(){
+		ResponseEntity<ResponseDTO<List<Admin>>> response = adminService.findAllAdmin();
 		return response;
 	}
 	
 	//更新管理員資料
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<Message> updateAdminController(@RequestBody Admin admin){
-		ResponseEntity<Message> response = adminService.upadteAdmin(admin);
-		
+	public ResponseEntity<ResponseDTO<Admin>> updateAdminController(@RequestBody Admin admin){
+		ResponseEntity<ResponseDTO<Admin>> response = adminService.updateAdmin(admin);
 		return response;
 	}
 	
 	//刪除管理員
 	@DeleteMapping(path = "/delete/{account}",produces = "application/json")
-	public ResponseEntity<Message> deleteAdminByIdController(@PathVariable("account") String account){
-		ResponseEntity<Message> response = adminService.deleteAdminById(account);
-		
+	public ResponseEntity<ResponseDTO<Admin>> deleteAdminByIdController(@PathVariable("account") String account){
+		ResponseEntity<ResponseDTO<Admin>> response = adminService.deleteAdminById(account);
 		return response;
 	}
 	
