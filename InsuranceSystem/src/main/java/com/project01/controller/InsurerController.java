@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project01.dto.ResponseDTO;
 import com.project01.entity.Insurer;
-import com.project01.entity.Message;
-import com.project01.repository.InsurerRepository;
 import com.project01.service.InsurerService;
 
 @RestController
@@ -29,8 +27,6 @@ public class InsurerController {
 
 	@Autowired
 	private InsurerService insurerService;
-	@Autowired
-	private InsurerRepository insurerRepository;
 	@Autowired
 	private static Logger logger = LoggerFactory.getLogger(InsurerController.class);
 	
