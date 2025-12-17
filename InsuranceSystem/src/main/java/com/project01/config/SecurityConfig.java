@@ -48,7 +48,7 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf
 					.disable())
 			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/insurancesystem/home/**","/insurancesystem/*/login/**","/css/**","/vue/**","/sweetaert/**").permitAll()
+					.requestMatchers("/insurancesystem/home/**","/insurancesystem/*/login/**","/css/**","/vue/**","/sweetalert/**").permitAll()
 					.requestMatchers("/admin/page/**").hasRole("ADMIN")
 					.anyRequest().authenticated()
 					)
@@ -85,7 +85,7 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf
 					.disable())
 			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/insurancesystem/home/**","/insurancesystem/*/login/**","/css/**","/vue/**","/sweetaert/**").permitAll()
+					.requestMatchers("/insurancesystem/home/**","/insurancesystem/*/login/**","/css/**","/vue/**","/sweetalert/**").permitAll()
 					.requestMatchers("/insurer/page/**","/insuranceCompany/page/**","/insuranceType/page/**","/policyPerson/page/**","/policy/page/**","/api/v1/policy/**","/api/v1/insuranceCompany/**","/api/v1/insuranceType/**","/api/v1/policyPerson/**","/api/v1/policyPersonRole/**").hasRole("USER")
 					.requestMatchers("/api/v1/insurer/**","/api/v1/admin/**").hasAnyRole("USER", "ADMIN")
 					.anyRequest().authenticated()
