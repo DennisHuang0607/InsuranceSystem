@@ -1,18 +1,15 @@
 package com.project01.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.project01.dto.ResponseDTO;
 import com.project01.entity.Policy;
 import com.project01.entity.PolicyPerson;
 import com.project01.entity.PolicyPersonRole;
 import com.project01.repository.PolicyPersonRepository;
 import com.project01.repository.PolicyPersonRoleRepository;
 import com.project01.repository.PolicyRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class PolicyPersonRoleService {
@@ -25,7 +22,7 @@ public class PolicyPersonRoleService {
 	private PolicyPersonRepository policyPersonRepository;
 	
 	//新增保單角色
-//	@Transactional
+//	@Transactional(rollbackFor = Exception.class)
 //	public ResponseEntity<ResponseDTO<PolicyPersonRole>> registerRole(int policyId, int personId, String role){
 //		try {
 //			if (!policyRepository.existsByPolicyId(policyId)) {
@@ -53,13 +50,14 @@ public class PolicyPersonRoleService {
 //		}
 //		catch(Exception e) {
 //			System.err.println("新增角色失敗: " + e.getMessage());
+//			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 //            ResponseDTO<PolicyPersonRole> response = new ResponseDTO<>(500, "角色新增失敗，系統異常", null);
 //            return ResponseEntity.status(500).body(response);
 //		}
 //	}
 	
 	//新增保單角色
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public PolicyPersonRole registerRole(int policyId, int personId, String role){
 		Policy policyRef = policyRepository.getReferenceById(policyId);
         PolicyPerson personRef = policyPersonRepository.getReferenceById(personId);

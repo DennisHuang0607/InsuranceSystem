@@ -10,12 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.project01.dto.ResponseDTO;
 import com.project01.entity.Insurer;
 import com.project01.repository.InsurerRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class InsurerService {
@@ -27,6 +27,7 @@ public class InsurerService {
 	private PasswordEncoder passwordEncoder;
 	
 	//新增Insurer
+	@Transactional(rollbackFor = Exception.class)
 	public ResponseEntity<ResponseDTO<Insurer>> registerInsurer(Insurer insurer) {
 		
 		try {
@@ -47,12 +48,14 @@ public class InsurerService {
 		}
 		catch (Exception e){
 			logger.error("保險員新增失敗，系統發生未預期異常:",e);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			ResponseDTO<Insurer> response = new ResponseDTO<>(500,"保險員新增失敗，系統異常了",null);
 			return ResponseEntity.status(500).body(response);
 		}
 	}
 	
 	//查詢全部Insurer
+	@Transactional(readOnly = true)
 	public ResponseEntity<ResponseDTO<List<Insurer>>> findAllInsurer(){
 
 		try {
@@ -69,6 +72,7 @@ public class InsurerService {
 	}
 	
 	//查詢單一Insurer
+	@Transactional(readOnly = true)
 	public ResponseEntity<ResponseDTO<Optional<Insurer>>> findInsurerByAccountId(String accountId){
 
 		try {
@@ -92,6 +96,7 @@ public class InsurerService {
 	}
 	
 	//更新Insurer
+	@Transactional(rollbackFor = Exception.class)
 	public ResponseEntity<ResponseDTO<Insurer>> updateInsurer(Insurer updateInsurer){
 
 		try {
@@ -116,13 +121,14 @@ public class InsurerService {
 		}
 		catch(Exception e){
 			logger.error("保險員資料更新失敗，後端發生異常:",e);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			ResponseDTO<Insurer> response = new ResponseDTO<>(500,"保險員資料更新失敗，資料庫可能連線異常",null);
 			return ResponseEntity.status(500).body(response);
 		}
 	}
 	
 	//刪除Insurer
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public ResponseEntity<ResponseDTO<Insurer>> deleteInsurerByAccountId(String accountId) {
 
 		try {
@@ -141,12 +147,14 @@ public class InsurerService {
 		}
 		catch(Exception e){
 			logger.error("保險員資料刪除失敗，後端可能異常",e);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			ResponseDTO<Insurer> response = new ResponseDTO<>(500,"保險員資料刪除失敗，資料庫可能連線異常",null);
 			return ResponseEntity.status(500).body(response);
 		}
 	}
 	
 	//查詢當前登入的Insurer
+	@Transactional(readOnly = true)
 	public ResponseEntity<ResponseDTO<Insurer>> getCurrentInsurer(Authentication authentication){
 		String account = authentication.getName();
 		Optional<Insurer> findInsurer = insurerRepository.findByAccountId(account);
