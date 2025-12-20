@@ -43,7 +43,7 @@ public class SecurityConfig {
 		AuthenticationManager adminManager = authBuilder.build();
 		
 		http
-			.securityMatcher("/insurancesystem/admin/login","/admin/page/**")
+			.securityMatcher("/insurancesystem/admin/login","/admin/page/**","/insurancesystem/admin/logout")
 			.authenticationManager(adminManager)
 			.csrf(csrf -> csrf
 					.disable())
@@ -59,11 +59,11 @@ public class SecurityConfig {
 					.successHandler(successHandler) //自定義的登入成功處理器
 					.failureHandler(failureHandler) //自定義的登入失敗處理器
 					.permitAll()
-//					)
-//			.logout(logout -> logout
-//					.logoutUrl("/logout")
-//					.logoutSuccessUrl("/login?logout=true")
-//					.permitAll()
+					)
+			.logout(logout -> logout
+					.logoutUrl("/insurancesystem/admin/logout")
+					.logoutSuccessUrl("/insurancesystem/home?logout=true")
+					.permitAll()
 					);
 		return http.build();
 	}
@@ -80,7 +80,7 @@ public class SecurityConfig {
 		AuthenticationManager insurerManger = authBuilder.build();
 		
 		http
-			.securityMatcher("/insurancesystem/insurer/login","/insurer/page/**","/insuranceCompany/page/**","/insuranceType/page/**","/policyPerson/page/**","/policy/page/**","/api/**")
+			.securityMatcher("/insurancesystem/insurer/login","/insurer/page/**","/insuranceCompany/page/**","/insuranceType/page/**","/policyPerson/page/**","/policy/page/**","/api/**","/insurancesystem/insurer/logout")
 			.authenticationManager(insurerManger)
 			.csrf(csrf -> csrf
 					.disable())
@@ -97,11 +97,11 @@ public class SecurityConfig {
 					.successHandler(successHandler) //自定義的登入成功處理器
 					.failureHandler(failureHandler) //自定義的登入失敗處理器
 					.permitAll()
-//					)
-//			.logout(logout -> logout
-//					.logoutUrl("/logout")
-//					.logoutSuccessUrl("/login?logout=true")
-//					.permitAll()
+					)
+			.logout(logout -> logout
+					.logoutUrl("/insurancesystem/insurer/logout")
+					.logoutSuccessUrl("/insurancesystem/home?logout=true")
+					.permitAll()
 					);
 		return http.build();
 	}
