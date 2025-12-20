@@ -104,7 +104,14 @@ public class InsurerService {
 			if(findInsurer.isPresent()) {
 				Insurer insurer = findInsurer.get();
 				insurer.setName(updateInsurer.getName());
-				insurer.setPassword(passwordEncoder.encode(updateInsurer.getPassword()));
+				//前端傳來的密碼不為空且長度大於0時，才進行加密並更新
+				if(updateInsurer.getPassword() != null && !updateInsurer.getPassword().trim().isEmpty()) {
+					insurer.setPassword(passwordEncoder.encode(updateInsurer.getPassword()));
+					logger.info("帳號:{} 已更新密碼",insurer.getAccountId());
+	            } 
+				else{
+	                logger.info("帳號:{} 未變更密碼",insurer.getAccountId());
+	            }
 				insurer.setPhone(updateInsurer.getPhone());
 				insurer.setEmail(updateInsurer.getEmail());
 				

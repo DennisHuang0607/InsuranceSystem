@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +34,7 @@ public class Insurer{
 	@Column(name = "email", nullable = true)
 	private String email;
 	@OneToMany(mappedBy = "insurer",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Policy> policies;
 	
 	public String getInsurerId() {

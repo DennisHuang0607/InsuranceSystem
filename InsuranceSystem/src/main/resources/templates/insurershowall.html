@@ -200,7 +200,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="insurerPassword" class="form-label">密碼</label>
-                                <input type="password" class="form-control" id="insurerPassword">
+                                <input type="password" class="form-control" id="insurerPassword" v-model="updateInsurer.password">
                             </div>
                             <div class="mb-3">
                                 <label for="insurerPhone" class="form-label">手機</label>
@@ -364,6 +364,8 @@
                 $('#resultMsg').text('');
 
                 this.updateInsurer = JSON.parse(JSON.stringify(this.selectedInsurer));
+                //清空密碼欄位，確保送出時如果沒填就是空的
+                this.updateInsurer.password = "";
                 $('#saveButton').off('click').on('click', () => {
                     let urlString = '/api/v1/insurer/update';
                     let jsonData = JSON.stringify(this.updateInsurer);
