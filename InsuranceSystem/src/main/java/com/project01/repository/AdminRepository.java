@@ -68,7 +68,7 @@ public class AdminRepository {
 		
 	}
 	
-	//更新管理員資料
+	//更新管理員資料(含密碼)
 	public int update(Admin admin) {
 		String sql = "UPDATE Admin SET name=?,password=?,email=? WHERE account_id=?";
 		int row = jdbcTemplate.update(sql,(ps)->{
@@ -78,6 +78,18 @@ public class AdminRepository {
 			ps.setString(4, admin.getAccountId());
 		});
 		System.out.println("修改資料成功");
+		return row;
+	}
+	
+	//更新管理員資料(不含密碼)
+	public int updateWithoutPassword(Admin admin) {
+		String sql = "UPDATE Admin SET name=?,email=? WHERE account_id=?";
+		int row = jdbcTemplate.update(sql,(ps)->{
+			ps.setString(1, admin.getName());
+			ps.setString(2, admin.getEmail());
+			ps.setString(3, admin.getAccountId());
+		});
+		System.out.println("修改資料成功(不含密碼)");
 		return row;
 	}
 	

@@ -185,7 +185,7 @@
                             </tr>
                             <tr>
                                 <td>密碼</td>
-                                <td><input type="text" v-model="admin.password"></td>
+                                <td><input type="text" v-model="admin.password" placeholder="若不修改請留空"></td>
                             </tr>
                             <tr>
                                 <td>Email</td>
@@ -342,6 +342,7 @@
 
                 this.resultMsg = '';
                 this.admin = JSON.parse(JSON.stringify(this.selectedAdmin));//進行副本編輯
+                this.admin.password = '';
                 $('#saveButton').off('click').on('click', () => {
                     let urlString = '/api/v1/admin/update';
                     let jsonData = JSON.stringify(this.admin);
@@ -356,8 +357,10 @@
                             let successMsg = data.message;
                             this.resultMsg = successMsg;
                             //將編輯後的資料覆蓋回去
-                            let index = this.adminsData.findIndex(a => a.accountId === this.admin.accountId);
-                            this.adminsData[index] = JSON.parse(JSON.stringify(this.admin));
+                            // let index = this.adminsData.findIndex(a => a.accountId === this.admin.accountId);
+                            // this.adminsData[index] = JSON.parse(JSON.stringify(this.admin));
+                            //刷新當前頁，更新列表資訊
+                            window.location.replace(window.location.href);
                             //同步更新selectedAdmin
                             this.selectedAdmin = this.adminsData[index];
                         },
@@ -427,7 +430,7 @@
                     }
                 });
 
-            }
+            },
         }
 
         const app = Vue.createApp({

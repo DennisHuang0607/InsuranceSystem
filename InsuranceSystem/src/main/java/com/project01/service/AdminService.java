@@ -76,18 +76,26 @@ public class AdminService {
 	//更新管理員資料
 	public ResponseEntity<ResponseDTO<Admin>> updateAdmin(Admin admin) {
 		
-		String encodedPassword = passwordEncoder.encode(admin.getPassword());
-		admin.setPassword(encodedPassword);
-		
 		try {
-			int row = adminRepository.update(admin);
+			int row;
+			if(admin.getPassword() != null && !admin.getPassword().trim().isEmpty()) {
+				String encodedPassword = passwordEncoder.encode(admin.getPassword());
+				admin.setPassword(encodedPassword);
+				
+				row = adminRepository.update(admin);
+				logger.info("管理員帳號:{} 已更新資料及密碼",admin.getAccountId());
+			}
+			else {
+				row = adminRepository.updateWithoutPassword(admin);
+				logger.info("管理員帳號:{} 已更新資料(保留原密碼)",admin.getAccountId());
+			}
+			
 			if(row == 1) {
-				logger.info("管理員資料更新成功，更新帳號：{}",admin.getAccountId());
 				ResponseDTO<Admin> response = new ResponseDTO<Admin>(200,"管理員資料更新成功",admin);
 			    return ResponseEntity.ok(response);
 			}
 			else {
-				logger.error("管理員資料更新失敗，資料不存在");
+				logger.error("管理員帳號:{} 不存在，更新失敗",admin.getAccountId());
 				ResponseDTO<Admin> response = new ResponseDTO<Admin>(404,"資料更新失敗，管理員資料不存在",null);
 			    return ResponseEntity.status(404).body(response);
 			}
