@@ -120,8 +120,8 @@
                 <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
                     <h5 class="mb-0">保險關係人總覽</h5>
                     <div>
-                        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal" v-bind:disabled="!selectedPerson" v-on:click="">編輯</button>
-                        <button type="button" class="btn btn-danger" v-bind:disabled="!selectedPerson" @click="">刪除</button>
+                        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal" v-bind:disabled="!selectedPerson" v-on:click="editHandler">編輯</button>
+                        <button type="button" class="btn btn-danger" v-bind:disabled="!selectedPerson" @click="deleteHandler">刪除</button>
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -174,36 +174,36 @@
                     <div class="modal-body" v-if="selectedPerson">
                         <form>
                             <div class="mb-3">
-                                <label for="" class="form-label"></label>
-                                <input type="text" class="form-control" id="" v-model="">
+                                <label for="personName" class="form-label">姓名*</label>
+                                <input type="text" class="form-control" id="personName" v-model="updatePerson.name">
                             </div>
                             <div class="mb-3">
-                                <label for="" class="form-label"></label>
-                                <input type="text" class="form-control" id="" v-model="">
+                                <label for="personIdNumber" class="form-label">身分證字號*</label>
+                                <input type="text" class="form-control" id="personIdNumber" v-model="updatePerson.idNumber">
                             </div>
                             <div class="mb-3">
-                                <label for="" class="form-label"></label>
-                                <input type="text" class="form-control" id="" v-model="">
+                                <label for="personGender" class="form-label">性別</label>
+                                <input type="text" class="form-control" id="personGender" v-model="updatePerson.gender">
                             </div>
                             <div class="mb-3">
-                                <label for="" class="form-label"></label>
-                                <input type="text" class="form-control" id="" v-model="">
+                                <label for="personBirthDate" class="form-label">生日*</label>
+                                <input type="date" class="form-control" id="personBirthDate" v-model="updatePerson.birthDate">
                             </div>
                             <div class="mb-3">
-                                <label for="" class="form-label"></label>
-                                <input type="text" class="form-control" id="" v-model="">
+                                <label for="personPhone" class="form-label">手機*</label>
+                                <input type="text" class="form-control" id="personPhone" v-model="updatePerson.phone">
                             </div>
                             <div class="mb-3">
-                                <label for="" class="form-label"></label>
-                                <input type="text" class="form-control" id="" v-model="">
+                                <label for="personEmail" class="form-label">信箱</label>
+                                <input type="text" class="form-control" id="personEmail" v-model="updatePerson.email">
                             </div>
                             <div class="mb-3">
-                                <label for="" class="form-label"></label>
-                                <input type="text" class="form-control" id="" v-model="">
+                                <label for="personAddress" class="form-label">地址</label>
+                                <input type="text" class="form-control" id="personAddress" v-model="updatePerson.address">
                             </div>
                             <div class="mb-3">
-                                <label for="" class="form-label"></label>
-                                <input type="text" class="form-control" id="" v-model="">
+                                <label for="personOccupation" class="form-label">職業</label>
+                                <input type="text" class="form-control" id="personOccupation" v-model="updatePerson.occupation">
                             </div>
                         </form>
                         <div id="resultMsg"></div>
@@ -239,7 +239,7 @@
     }
     const functions = {
         //後端撈資料
-        fetchCompanies(){
+        fetchPersons(){
             $.getJSON('/api/v1/policyPerson/showAll', (data)=>{
                 this.personData = data;
             });
@@ -253,21 +253,21 @@
                 this.selectedPerson = item;
             }
         },
-        //編輯保險公司
+        //編輯保險關係人
         editHandler(e){
-            console.log("要編輯的公司資料:",this.selectedCompany);
+            console.log("要編輯的保險關係人:",this.selectedPerson);
             $('#resultMsg').text('');
             
-            this.updateCompany = JSON.parse(JSON.stringify(this.selectedCompany));
+            this.updatePerson = JSON.parse(JSON.stringify(this.selectedPerson));
             $('#saveButton').off('click').on('click', () => {
 
-                if(!this.updateCompany.companyName.trim()){
-                    $('#resultMsg').text("公司名稱為必填欄位，請勿留空！");
+                if(!this.updatePerson.name.trim() || !this.updatePerson.idNumber.trim() || !this.updatePerson.birthDate.trim() || !this.updatePerson.phone.trim()){
+                    $('#resultMsg').text("*為必填欄位，請勿留空！");
                     return;
                 }
 
-                let urlString = '/api/v1/insuranceCompany/update';
-                let jsonData = JSON.stringify(this.updateCompany);
+                let urlString = '/api/v1/policyPerson/update';
+                let jsonData = JSON.stringify(this.updatePerson);
                 $.ajax({
                     url:urlString,
                     type:'PUT',
@@ -278,8 +278,8 @@
                         console.log(data);
                         successMsg = data.message;
                         $('#resultMsg').text(successMsg);
-                        this.fetchCompanies();
-                        this.selectedCompany = this.updateCompany;
+                        this.fetchPersons();
+                        this.selectedPerson = this.updatePerson;
                     },
                     error:(xhr,status,error) => {
                         errorMsg = xhr.responseJSON.message;
@@ -291,16 +291,16 @@
             })
 
         },
-        //刪除保險公司
+        //刪除保險關係人
         deleteHandler(e){
-            console.log("要刪除的公司資料:",this.selectedCompany);
+            console.log("要刪除的保險關係人:",this.selectedPerson);
             $('#resultMsg').text('');
 
-            this.deleteCompany = this.selectedCompany;
+            this.deletePerson = this.selectedPerson;
 
             Swal.fire({
                     title: "確定刪除嗎？",
-                    text: "刪除保險公司：" + this.deleteCompany.companyName,
+                    text: "刪除保險關係人：" + this.deletePerson.name,
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
@@ -310,7 +310,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         console.log("刪除作業");
-                        let urlString = '/api/v1/insuranceCompany/delete/' + this.deleteCompany.companyId;
+                        let urlString = '/api/v1/policyPerson/delete/' + this.deletePerson.personId;
                         $.ajax({
                             url:urlString,
                             type:'DELETE',
@@ -321,12 +321,12 @@
                                     width: "25em",
                                     heightAuto: true,
                                     icon: "success",
-                                    title: "保險公司刪除成功",
+                                    title: "保險關係人刪除成功",
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
-                                this.fetchCompanies();
-                                this.selectedCompany = null;
+                                this.fetchPersons();
+                                this.selectedPerson = null;
                             },
                             error:(xhr,status,error) => {
                                 let errorMsg = xhr.responseJSON.message;
@@ -335,7 +335,7 @@
                                     width: "25em",
                                     heightAuto: true,
                                     icon: "error",
-                                    title: "保險公司刪除失敗",
+                                    title: "保險關係人刪除失敗",
                                     text: errorMsg,
                                     showConfirmButton: false,
                                     timer: 1500
@@ -366,7 +366,6 @@
                     console.log(data);
                     let successMsg = data.message;
                     $('#resultMsgCompany').text(successMsg)
-                    this.fetchCompanies();
                 },
                 error:(xhr,status,error) => {
                     let errorMsg=xhr.responseJSON;
@@ -428,7 +427,7 @@
         },
         methods:functions,
         mounted(){
-            this.fetchCompanies();//頁面第一次載入時，向後端撈資料
+            this.fetchPersons();//頁面第一次載入時，向後端撈資料
         }
 
     }).mount('#app');
