@@ -5,6 +5,8 @@ import jakarta.persistence.OneToMany;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,6 +28,7 @@ public class InsuranceType {
 	@Column(name = "description",nullable = true)
 	private String description;
 	@OneToMany(mappedBy = "type",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Policy> policies;
 	
 	public int getTypeId() {
