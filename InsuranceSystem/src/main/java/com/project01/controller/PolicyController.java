@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project01.dto.PolicyAndRolesDTO;
+import com.project01.dto.PolicyListDTO;
 import com.project01.dto.ResponseDTO;
 import com.project01.entity.Policy;
 import com.project01.service.PolicyService;
@@ -56,6 +57,11 @@ public class PolicyController {
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
 	public ResponseEntity<ResponseDTO<Policy>> deletePolicy(@PathVariable("id") int policyId){
 		return policyService.deletePolicy(policyId);
+	}
+	
+	@GetMapping(path = "/allPolicyOverview",produces = "application/json")
+	public ResponseEntity<ResponseDTO<List<PolicyListDTO>>> getAllPolicyOverviewController(){
+		return policyService.getAllPolicyOverview();
 	}
 	
 }

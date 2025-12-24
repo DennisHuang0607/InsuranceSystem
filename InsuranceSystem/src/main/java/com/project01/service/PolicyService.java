@@ -1,6 +1,8 @@
 package com.project01.service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +14,11 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.project01.component.PolicyNumberComponent;
 import com.project01.dto.PolicyAndRolesDTO;
+import com.project01.dto.PolicyListDTO;
 import com.project01.dto.PolicyRolesDTO;
 import com.project01.dto.ResponseDTO;
 import com.project01.entity.Policy;
+import com.project01.entity.PolicyPersonRole;
 import com.project01.repository.PolicyRepository;
 
 @Service
@@ -147,6 +151,71 @@ public class PolicyService {
             return ResponseEntity.status(500).body(response);
         }
     }
+	
+	//取得policy+role
+	@Transactional(rollbackFor = Exception.class)
+	public ResponseEntity<ResponseDTO<List<PolicyListDTO>>> getAllPolicyOverview() {
+	    try {
+	        //撈出所有保單(包含關聯資料)
+	        List<Policy> policies = policyRepository.findAllWithDetails();
+
+	        //轉換成DTO
+	        List<PolicyListDTO> dtoList = policies.stream().map(policy -> {
+	            PolicyListDTO dto = new PolicyListDTO();
+	            
+	            //基本欄位搬移
+	            dto.setPolicyId(policy.getPolicyId());
+	            dto.setPolicyNumber(policy.getPolicyNumber());
+	            dto.setInsuranceType(policy.getType().getTypeName());
+	            dto.setInsuranceCompany(policy.getCompany().getCompanyName());
+	            dto.setInsurer(policy.getInsurer().getName());
+	            dto.setAcceptDate(policy.getAcceptDate());
+	            dto.setBeginDate(policy.getBeginDate());
+	            dto.setEndDate(policy.getEndDate());
+	            dto.setInsuredAmount(policy.getInsuredAmount());
+	            dto.setPaymentType(policy.getPaymentType());
+	            
+	            //防呆機制，先取出List，如果為null則給一個空List，避免stream()報錯
+	            List<PolicyPersonRole> roles = policy.getPolicyPersonRoles();
+	            if (roles == null) {
+	                roles = Collections.emptyList();
+	            }
+	            
+	            //找投保人
+	            String policyholder = roles.stream()
+	                .filter(r -> "投保人".equals(r.getRole())) // 請依你實際 DB 存的字串修改
+	                .map(r -> r.getPerson().getName())
+	                .findFirst()
+	                .orElse("未知");
+	            dto.setPolicyholder(policyholder);
+
+	            //找被保人
+	            String insured = roles.stream()
+	                .filter(r -> "被保人".equals(r.getRole()))
+	                .map(r -> r.getPerson().getName())
+	                .findFirst()
+	                .orElse("未知");
+	            dto.setInsured(insured);
+
+	            //找受益人
+	            String beneficiaries = roles.stream()
+	                .filter(r -> "受益人".equals(r.getRole()))
+	                .map(r -> r.getPerson().getName())
+	                .findFirst()
+	                .orElse("未知");
+	            dto.setBeneficiary(beneficiaries);
+
+	            return dto;
+	        }).collect(Collectors.toList());
+
+	        logger.info("查詢保單總覽成功，共{}筆",dtoList.size());
+	        return ResponseEntity.ok(new ResponseDTO<>(200,"查詢成功",dtoList));
+
+	    } catch (Exception e) {
+	        logger.error("查詢保單總覽失敗",e);
+	        return ResponseEntity.status(500).body(new ResponseDTO<>(500,"系統異常",null));
+	    }
+	}
 	
 	
 }

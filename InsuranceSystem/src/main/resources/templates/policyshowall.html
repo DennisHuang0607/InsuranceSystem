@@ -4,8 +4,299 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>保單總覽</title>
+
+    <!--bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!--bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <!--jQuery UI核心-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!--動態參考Vue3.0-->
+    <script th:src="@{/vue/vue.global.js}"></script>
+    <!--動態參考Sweetalert2-->
+    <script th:src="@{/sweetalert/sweetalert2.min.js}"></script>
+    <!--SweetAlert2載入-->
+    <link rel="stylesheet" th:href="@{/css/sweetalert2.min.css}">
+
+    <style>
+        .table-container {
+            width: 100%;        /* 區塊寬度佔畫面80% */
+            max-width: 100%; /* 限制最大寬度 */
+            overflow-y: auto;  /* 超出高度時出現垂直卷軸 */
+        }
+
+        .rightbox {
+        text-align: right; /* 設置文字靠右對齊 */
+        }
+    </style>
+
 </head>
 <body>
     
+    <div id="app">
+
+        <!-- Bootstrap Dropdown 功能選單 -->
+        <div class="dropdown rightbox">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                保險員功能
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="/policy/page/create">保單新增</a></li>
+                <li><a class="dropdown-item" href="/policy/page/showall">保單總覽</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createCompanyModal" @click="resetCompanyForm">保險公司新增</a></li>
+                <li><a class="dropdown-item" href="/insuranceCompany/page/showall">保險公司清單</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createTypeModal"  @click="resetTypeForm">保單類型新增</a></li>
+                <li><a class="dropdown-item" href="/insuranceType/page/showall">保單類型清單</a></li>
+                <li><a class="dropdown-item" href="/policyPerson/page/showall">保險關係人總覽</a></li>
+                <li><a class="dropdown-item" href="/insurancesystem/insurer/logout">登出</a></li>
+            </ul>
+        </div>
+
+        <!-- Bootstrap Modal (保險公司新增) -->
+        <div class="modal fade" id="createCompanyModal" tabindex="-1" aria-labelledby="createCompanyModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createCompanyModalLabel">保險公司新增</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="createCompanyName" class="form-label">公司名稱*</label>
+                                <input type="text" class="form-control" id="createCompanyName" v-model="newCompany.companyName">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createCompanyAddress" class="form-label">地址</label>
+                                <input type="text" class="form-control" id="createCompanyAddress" v-model="newCompany.address">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createCompanyTelephone" class="form-label">電話</label>
+                                <input type="text" class="form-control" id="createCompanyTelephone" v-model="newCompany.telephone">
+                            </div>
+                        </form>
+                        <div id="resultMsgCompany"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" @click="createCompanyHandler">新增</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap Modal (保單類型新增) -->
+        <div class="modal fade" id="createTypeModal" tabindex="-1" aria-labelledby="createTypeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createTypeModalLabel">保單類型新增</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="createTypeName" class="form-label">保單類型*</label>
+                                <input type="text" class="form-control" id="createTypeName" v-model="newType.typeName">
+                            </div>
+                            <div class="mb-3">
+                                <label for="createTypeDescription" class="form-label">描述</label>
+                                <input type="text" class="form-control" id="createTypeDescription" v-model="newType.description">
+                            </div>
+                        </form>
+                        <div id="resultMsgType"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" @click="createTypeHandler">新增</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--保單總覽-->
+        <div class="container mt-5">
+            <div class="card shadow mx-auto table-container">
+                <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">保單總覽</h5>
+                    <!-- <div>
+                        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal" v-bind:disabled="!selectedPerson" v-on:click="editHandler">編輯</button>
+                        <button type="button" class="btn btn-danger" v-bind:disabled="!selectedPolicy" @click="deleteHandler">刪除</button>
+                    </div> -->
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <!-- <th></th> -->
+                                    <th class="fs-5 fw-bold" v-show="isShow">ID</th>
+                                    <th class="fs-5 fw-bold">保單號碼</th>
+                                    <th class="fs-5 fw-bold">保單類型</th>
+                                    <th class="fs-5 fw-bold">保險公司</th>
+                                    <th class="fs-5 fw-bold">保險員</th>
+                                    <th class="fs-5 fw-bold">受理日</th>
+                                    <th class="fs-5 fw-bold">起始日</th>
+                                    <th class="fs-5 fw-bold">到期日</th>
+                                    <th class="fs-5 fw-bold">保費</th>
+                                    <th class="fs-5 fw-bold">繳費方式</th>
+                                    <th class="fs-5 fw-bold">投保人</th>
+                                    <th class="fs-5 fw-bold">被保人</th>
+                                    <th class="fs-5 fw-bold">受益人</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in policyData">
+                                    <!-- <td>
+                                        <input type="checkbox" v-bind:checked="selectedPolicy && selectedPolicy.policyId === item.policyId" v-on:change="selectPolicy(item)">
+                                    </td> -->
+                                    <td v-show="isShow">{{item.policyId}}</td>
+                                    <td>{{item.policyNumber}}</td>
+                                    <td>{{item.insuranceType}}</td>
+                                    <td>{{item.insuranceCompany}}</td>
+                                    <td>{{item.insurer}}</td>
+                                    <td>{{item.acceptDate}}</td>
+                                    <td>{{item.beginDate}}</td>
+                                    <td>{{item.endDate}}</td>
+                                    <td>{{item.insuredAmount}}</td>
+                                    <td>{{item.paymentType}}</td>
+                                    <td>{{item.policyholder}}</td>
+                                    <td>{{item.insured}}</td>
+                                    <td>{{item.beneficiary}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
 </body>
+<script>
+    const dataModel = {
+        policyData:[],
+        selectedPolicy:null,
+        // updatePolicy:{},
+        // deletePolicy:{},
+        isShow:false,
+        newCompany: {
+            companyName:'',
+            address:'',
+            telephone:''
+        },
+        newType:{
+            typeName:'',
+            description:''
+        },
+    }
+    const functions = {
+        //後端撈資料
+        fetchPolicy(){
+            $.getJSON('/api/v1/policy/allPolicyOverview', (data)=>{
+                this.policyData = data.data;
+            });
+        },
+        //取消勾選
+        selectPolicy(item){
+            if(this.selectedPolicy && this.selectedPolicy.policyId === item.policyId){
+                this.selectedPolicy = null;
+            }
+            else{
+                this.selectedPolicy = item;
+            }
+        },
+        //編輯保單
+        
+        //刪除保單
+        
+        //新增保險公司-送出
+        createCompanyHandler(e){
+
+            if(!this.newCompany.companyName.trim()){
+                $('#resultMsgCompany').text("公司名稱為必填欄位，請勿留空！")
+                return;
+            }
+
+            let urlString = '/api/v1/insuranceCompany/register';
+            let jsonData = JSON.stringify(this.newCompany);
+            $.ajax({
+                url:urlString,
+                type:'POST',
+                data:jsonData,
+                dataType:'json',
+                contentType:'application/json',
+                success:(data,sttatus,xhr) => {
+                    console.log(data);
+                    let successMsg = data.message;
+                    $('#resultMsgCompany').text(successMsg)
+                },
+                error:(xhr,status,error) => {
+                    let errorMsg=xhr.responseJSON;
+                    console.log(errorMsg);
+                    $('#resultMsgCompany').text(errorMsg.message);
+                }
+            })
+        },
+        //新增保險公司-開啟model先清上一次殘留資料
+        resetCompanyForm(e) {
+            this.newCompany = {
+                companyName: '',
+                address: '',
+                telephone: ''
+            };
+            $('#resultMsgCompany').text('');
+        },
+        //新增保險類型-送出
+        createTypeHandler(e){
+
+            if(!this.newType.typeName.trim()){
+                $('#resultMsgType').text("保單類型為必填欄位，請勿留空！")
+                return;
+            }
+
+            let jsonData = JSON.stringify(this.newType);
+            let urlString = '/api/v1/insuranceType/register';
+            $.ajax({
+                url:urlString,
+                type:'POST',
+                data:jsonData,
+                dataType:'json',
+                contentType:'application/json',
+                success:(data,status,xhr) => {
+                    console.log(data);
+                    let successMsg = data.message;
+                    $('#resultMsgType').text(successMsg);
+                },
+                error:(xhr,status,error) => {
+                    let errorMsg = xhr.responseJSON.message;
+                    console.log(errorMsg);
+                    $('#resultMsgType').text(errorMsg);
+                }
+            })
+        },
+        //新增保險類型-開啟model先清上一次殘留資料
+        resetTypeForm(e){
+            this.newType = {
+                typeName:'',
+                description:''
+            };
+            $('#resultMsgType').text('');
+        },
+        
+    }
+    const app = Vue.createApp({
+        data(){
+            return dataModel;
+        },
+        methods:functions,
+        mounted(){
+            this.fetchPolicy();//頁面第一次載入時，向後端撈資料
+        }
+
+    }).mount('#app');
+
+</script>
 </html>

@@ -1,12 +1,15 @@
 package com.project01.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project01.component.PolicyNumberComponent;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
@@ -40,8 +44,8 @@ public class Policy {
     @JoinColumn(name = "insurer_id")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "policies"})
 	private Insurer insurer;
-	@Column(name = "insured_amount")
-	private int insuredAmount;
+	@Column(name = "insured_amount",precision = 19,scale = 2)
+	private BigDecimal insuredAmount;
 	@Column(name = "accept_date")
 	private LocalDate acceptDate;
 	@Column(name = "begin_date")
@@ -50,6 +54,9 @@ public class Policy {
 	private LocalDate endDate;
 	@Column(name = "payment_type",nullable = true)
 	private String paymentType;
+    @OneToMany(mappedBy = "policy",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler","policy"})
+    private List<PolicyPersonRole> policyPersonRoles;
 	
 	public int getPolicyId() {
 		return policyId;
@@ -81,10 +88,10 @@ public class Policy {
 	public void setInsurer(Insurer insurer) {
 		this.insurer = insurer;
 	}
-	public int getInsuredAmount() {
+	public BigDecimal getInsuredAmount() {
 		return insuredAmount;
 	}
-	public void setInsuredAmount(int insuredAmount) {
+	public void setInsuredAmount(BigDecimal insuredAmount) {
 		this.insuredAmount = insuredAmount;
 	}
 	public LocalDate getAcceptDate() {
@@ -110,6 +117,12 @@ public class Policy {
 	}
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
+	}
+	public List<PolicyPersonRole> getPolicyPersonRoles() {
+		return policyPersonRoles;
+	}
+	public void setPolicyPersonRoles(List<PolicyPersonRole> policyPersonRoles) {
+		this.policyPersonRoles = policyPersonRoles;
 	}
 	
 }
