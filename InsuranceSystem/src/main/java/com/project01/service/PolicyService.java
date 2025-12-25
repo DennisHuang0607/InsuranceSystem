@@ -175,34 +175,27 @@ public class PolicyService {
 	            dto.setInsuredAmount(policy.getInsuredAmount());
 	            dto.setPaymentType(policy.getPaymentType());
 	            
-	            //防呆機制，先取出List，如果為null則給一個空List，避免stream()報錯
 	            List<PolicyPersonRole> roles = policy.getPolicyPersonRoles();
-	            if (roles == null) {
-	                roles = Collections.emptyList();
-	            }
-	            
 	            //找投保人
 	            String policyholder = roles.stream()
-	                .filter(r -> "投保人".equals(r.getRole())) // 請依你實際 DB 存的字串修改
+	                .filter(r -> "投保人".equals(r.getRole()))
 	                .map(r -> r.getPerson().getName())
 	                .findFirst()
-	                .orElse("未知");
+	                .orElseThrow(() -> new RuntimeException("資料異常，保單ID:" + policy.getPolicyId() + "，缺少投保人"));
 	            dto.setPolicyholder(policyholder);
-
 	            //找被保人
 	            String insured = roles.stream()
 	                .filter(r -> "被保人".equals(r.getRole()))
 	                .map(r -> r.getPerson().getName())
 	                .findFirst()
-	                .orElse("未知");
+	                .orElseThrow(() -> new RuntimeException("資料異常，保單ID:" + policy.getPolicyId() + "，缺少被保人"));
 	            dto.setInsured(insured);
-
 	            //找受益人
 	            String beneficiaries = roles.stream()
 	                .filter(r -> "受益人".equals(r.getRole()))
 	                .map(r -> r.getPerson().getName())
 	                .findFirst()
-	                .orElse("未知");
+	                .orElseThrow(() -> new RuntimeException("資料異常，保單ID:" + policy.getPolicyId() + "，缺少受益人"));
 	            dto.setBeneficiary(beneficiaries);
 
 	            return dto;
@@ -212,7 +205,7 @@ public class PolicyService {
 	        return ResponseEntity.ok(new ResponseDTO<>(200,"查詢成功",dtoList));
 
 	    } catch (Exception e) {
-	        logger.error("查詢保單總覽失敗",e);
+	        logger.error("查詢保單總覽失敗，後端異常了:",e);
 	        return ResponseEntity.status(500).body(new ResponseDTO<>(500,"系統異常",null));
 	    }
 	}

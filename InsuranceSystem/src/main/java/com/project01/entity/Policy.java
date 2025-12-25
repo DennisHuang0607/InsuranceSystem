@@ -21,6 +21,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "Policy")
@@ -44,7 +46,9 @@ public class Policy {
     @JoinColumn(name = "insurer_id")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "policies"})
 	private Insurer insurer;
-	@Column(name = "insured_amount",precision = 19,scale = 2)
+	@Column(name = "insured_amount",precision = 12,scale = 0)
+	@Digits(integer = 10, fraction = 0, message = "保費必須為整數")
+	@Positive(message = "保費金額必須大於0")
 	private BigDecimal insuredAmount;
 	@Column(name = "accept_date")
 	private LocalDate acceptDate;

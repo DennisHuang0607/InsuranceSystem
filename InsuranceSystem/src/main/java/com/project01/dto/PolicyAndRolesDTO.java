@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.project01.entity.Policy;
 
+import jakarta.validation.Valid;
+
 public class PolicyAndRolesDTO {
+	@Valid //必須加這行，才會去檢查Policy裡面的@Digits、@Positive
     private Policy policy; 
     private List<PolicyRolesDTO> PolicyRoles; 
 

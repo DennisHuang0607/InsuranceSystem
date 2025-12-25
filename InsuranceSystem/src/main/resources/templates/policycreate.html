@@ -156,7 +156,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="insuredAmount" class="form-label">保費*</label>
-                                <input type="number" class="form-control" id="insuredAmount" v-model="policy.insuredAmount">
+                                <input type="number" class="form-control" step="1" min="0" id="insuredAmount" v-model="policy.insuredAmount">
                             </div>
                             <div class="col-md-4">
                                 <label for="paymentType" class="form-label">繳費方式*</label>
@@ -594,11 +594,11 @@
                 data:jsonData,
                 dataType:'json',
                 contentType:'application/json',
-                success:(data,sttatus,xhr) => {
+                success:(data,status,xhr) => {
                     console.log(data);
                     let successMsg = data.message;
                     $('#resultMsgCompany').text(successMsg)
-                    this.fetchCompanies();
+                    window.dispatchEvent(new Event('companyUpdated'));
                 },
                 error:(xhr,status,error) => {
                     let errorMsg=xhr.responseJSON;
@@ -723,23 +723,7 @@
         },
         personData:[],
         checkedPerson:null,
-        policyHolderRole:{
-            personId:null,
-            role:'投保人',
-        },
-        insuredRole:{
-            personId:null,
-            role:'被保人',
-        },
-        beneficiaryRole:{
-            personId:null,
-            role:'受益人',
-        },
-        request:{
-            policy:'',
-            policyRoles:'',
-        },
-        roles:[],
+        request:{},
     }
 
     const policyFunctions = {
@@ -1042,12 +1026,17 @@
                 return;
             }
 
-            this.createRole();
-            this.roles.push(this.policyHolderRole);
-            this.roles.push(this.insuredRole);
-            this.roles.push(this.beneficiaryRole);
-            this.request.policy = JSON.parse(JSON.stringify(this.policy));
-            this.request.policyRoles = JSON.parse(JSON.stringify(this.roles));
+            const policyRoles = [
+                { personId:this.policyHolder.personId,role:'投保人'},
+                { personId:this.insured.personId,role:'被保人'},
+                { personId:this.beneficiary.personId,role:'受益人'}
+            ];
+
+            this.request = {
+                policy:JSON.parse(JSON.stringify(this.policy)),
+                policyRoles:policyRoles
+            };
+
             console.log('要送出的保單&角色',this.request);
 
             let jsonData = JSON.stringify(this.request);
@@ -1154,6 +1143,9 @@
             this.fetchTypes();
             this.fetchCompanies();
             this.fetchCurrentInsurer();
+            window.addEventListener('companyUpdated', () => {
+                this.fetchCompanies();
+            });
         },
 
     }).mount('#policyApp');

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,8 @@ import com.project01.dto.PolicyListDTO;
 import com.project01.dto.ResponseDTO;
 import com.project01.entity.Policy;
 import com.project01.service.PolicyService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/api/v1/policy")
@@ -40,7 +43,13 @@ public class PolicyController {
 	}
 	
 	@PostMapping(path = "/registerP&R",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<ResponseDTO<Policy>> registerPolicyAndRolesController(@RequestBody PolicyAndRolesDTO request){
+	public ResponseEntity<ResponseDTO<Policy>> registerPolicyAndRolesController(@Valid @RequestBody PolicyAndRolesDTO request,BindingResult result){
+		//捕捉保費不為正整數的錯誤
+		if (result.hasErrors()) {
+	        String errorMsg = result.getAllErrors().get(0).getDefaultMessage();
+	        return ResponseEntity.status(400).body(new ResponseDTO<>(400, errorMsg, null));
+	    }
+		
 		return policyService.registerPolicyAndRoles(request);
 	}
 	
