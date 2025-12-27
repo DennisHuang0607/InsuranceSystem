@@ -173,7 +173,24 @@ public class PolicyService {
 	            dto.setBeginDate(policy.getBeginDate());
 	            dto.setEndDate(policy.getEndDate());
 	            dto.setInsuredAmount(policy.getInsuredAmount());
-	            dto.setPaymentType(policy.getPaymentType());
+	            
+	            String paymentType = null;
+	            if(policy.getPaymentType().equals("once")) {
+	            	paymentType = "單次";
+	            }
+	            else if(policy.getPaymentType().equals("monthly")) {
+	            	paymentType = "月繳";
+				}
+	            else if(policy.getPaymentType().equals("quarterly")) {
+	            	paymentType = "季繳";
+	            }
+	            else if(policy.getPaymentType().equals("semiAnnually")) {
+	            	paymentType = "半年繳";
+	            }
+	            else if(policy.getPaymentType().equals("annually")) {
+	            	paymentType = "年繳";
+	            }
+	            dto.setPaymentType(paymentType);
 	            
 	            List<PolicyPersonRole> roles = policy.getPolicyPersonRoles();
 	            //找投保人
