@@ -42,7 +42,7 @@ public class AdminRepository {
 			admin.setEmail(rs.getString("email"));
 			return admin;
 		});
-		System.out.println("查詢管理員資料成功");
+		System.out.println("查詢所有管理員資料成功");
 		return result;
 	}
 	

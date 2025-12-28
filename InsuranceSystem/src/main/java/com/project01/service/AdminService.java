@@ -61,8 +61,8 @@ public class AdminService {
 		
 		try {
 			List<Admin> result = adminRepository.findAll();
-			logger.info("管理員查詢成功");
-			ResponseDTO<List<Admin>> response = new ResponseDTO<List<Admin>>(200,"管理員查詢成功",result);
+			logger.info("所有管理員查詢成功");
+			ResponseDTO<List<Admin>> response = new ResponseDTO<List<Admin>>(200,"所有管理員查詢成功",result);
 		    return ResponseEntity.ok(response);
 		}
 		catch (DataAccessException e) {

@@ -5,25 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理員列表</title>
 
-    <!--動態參考Vue3.0-->
-    <script th:src="@{/vue/vue.global.js}"></script>
-    <!--動態參考Sweetalert2-->
-    <script th:src="@{/sweetalert/sweetalert2.min.js}"></script>
-    <!--SweetAlert2載入-->
-    <link rel="stylesheet" th:href="@{/css/sweetalert2.min.css}">
     <!--bootstrap CSS-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <!--bootstrap JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
     <!--jQuery UI核心-->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <!--前端傳入的"管理員列表"-->
-    <script th:inline="javascript">
-        var admins = /*[[${admins}]]*/ [];
-    </script>
+    <!--動態參考Vue3.0-->
+    <script th:src="@{/vue/vue.global.js}"></script>
+    <!--動態參考Sweetalert2-->
+    <script th:src="@{/sweetalert/sweetalert2.min.js}"></script>
+    <!--SweetAlert2載入-->
+    <link rel="stylesheet" th:href="@{/css/sweetalert2.min.css}">
 
     <style>
+        .table-container {
+            width: 80%;        /* 區塊寬度佔畫面80% */
+            max-width: 1000px; /* 限制最大寬度 */
+            overflow-y: auto;  /* 超出高度時出現垂直卷軸 */
+        }
+
         .rightbox {
         text-align: right; /* 設置文字靠右對齊 */
         }
@@ -33,17 +34,16 @@
 
 <body>
 
-    <fieldset>
+    <fieldset id="app">
         <!-- Bootstrap Dropdown 功能選單 -->
         <div class="dropdown rightbox">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                 管理員功能
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <!-- 用 data-bs-toggle 直接觸發 Modal -->
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createAdminModal">管理員新增</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createAdminModal" @click="resetAdminForm">管理員新增</a></li>
                 <li><a class="dropdown-item" href="/admin/page/adminshowall">管理員列表</a></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createInsurerModal">保險員新增</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#createInsurerModal" @click="resetInsurerForm">保險員新增</a></li>
                 <li><a class="dropdown-item" href="/admin/page/insurershowall">保險員列表</a></li>
                 <li><a class="dropdown-item" href="/insurancesystem/admin/logout">登出</a></li>
             </ul>
@@ -61,20 +61,20 @@
                     <div class="modal-body">
                         <form>
                             <div class="mb-3">
-                                <label for="createAdminName" class="form-label">中文姓名</label>
-                                <input type="text" class="form-control" id="createAdminName">
+                                <label for="createAdminName" class="form-label">中文姓名*</label>
+                                <input type="text" class="form-control" id="createAdminName" v-model="newAdmin.name">
                             </div>
                             <div class="mb-3">
-                                <label for="createAdminAccountId" class="form-label">帳號</label>
-                                <input type="text" class="form-control" id="createAdminAccountId">
+                                <label for="createAdminAccountId" class="form-label">帳號*</label>
+                                <input type="text" class="form-control" id="createAdminAccountId" v-model="newAdmin.accountId">
                             </div>
                             <div class="mb-3">
-                                <label for="createAdminPassword" class="form-label">密碼</label>
-                                <input type="password" class="form-control" id="createAdminPassword">
+                                <label for="createAdminPassword" class="form-label">密碼*</label>
+                                <input type="password" class="form-control" id="createAdminPassword" v-model="newAdmin.password">
                             </div>
                             <div class="mb-3">
-                                <label for="createAdminEmail" class="form-label">信箱</label>
-                                <input type="text" class="form-control" id="createAdminEmail">
+                                <label for="createAdminEmail" class="form-label">信箱*</label>
+                                <input type="text" class="form-control" id="createAdminEmail" v-model="newAdmin.email">
                             </div>
                         </form>
                         <div id="resultMsgAdmin"></div>
@@ -82,7 +82,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" id="submitAdmin">新增</button>
+                        <button type="button" class="btn btn-primary" v-on:click="createAdminHandler(e)">新增</button>
                     </div>
                 </div>
             </div>
@@ -100,24 +100,24 @@
                     <div class="modal-body">
                         <form>
                             <div class="mb-3">
-                                <label for="createInsurerName" class="form-label">中文姓名</label>
-                                <input type="text" class="form-control" id="createInsurerName">
+                                <label for="createInsurerName" class="form-label">中文姓名*</label>
+                                <input type="text" class="form-control" id="createInsurerName" v-model="newInsurer.name">
                             </div>
                             <div class="mb-3">
-                                <label for="createInsurerAccountId" class="form-label">帳號</label>
-                                <input type="text" class="form-control" id="createInsurerAccountId">
+                                <label for="createInsurerAccountId" class="form-label">帳號*</label>
+                                <input type="text" class="form-control" id="createInsurerAccountId" v-model="newInsurer.accountId">
                             </div>
                             <div class="mb-3">
-                                <label for="createInsurerPassword" class="form-label">密碼</label>
-                                <input type="password" class="form-control" id="createInsurerPassword">
+                                <label for="createInsurerPassword" class="form-label">密碼*</label>
+                                <input type="password" class="form-control" id="createInsurerPassword" v-model="newInsurer.password">
                             </div>
                             <div class="mb-3">
-                                <label for="createInsurerPhone" class="form-label">手機</label>
-                                <input type="text" class="form-control" id="createInsurerPhone">
+                                <label for="createInsurerPhone" class="form-label">手機*</label>
+                                <input type="text" class="form-control" id="createInsurerPhone" v-model="newInsurer.phone">
                             </div>
                             <div class="mb-3">
-                                <label for="createInsurerEmail" class="form-label">信箱</label>
-                                <input type="text" class="form-control" id="createInsurerEmail">
+                                <label for="createInsurerEmail" class="form-label">信箱*</label>
+                                <input type="text" class="form-control" id="createInsurerEmail" v-model="newInsurer.email">
                             </div>
                         </form>
                         <div id="resultMsgInsurer"></div>
@@ -125,44 +125,49 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" id="submitInsurer">新增</button>
+                        <button type="button" class="btn btn-primary" @click="createInsurerHandler(e)">新增</button>
                     </div>
                 </div>
             </div>
         </div>
 
-    </fieldset>
-
-    <!--管理員列表-->
-    <fieldset id="app">
-        <legend>管理員列表</legend>
-        <button type="button" class="btn btn-primary border" data-bs-toggle="modal" data-bs-target="#editModal" v-bind:disabled="!selectedAdmin" @click="editHandler">編輯</button>
-        <button type="button" class="btn btn-danger border" v-bind:disabled="!selectedAdmin" @click="deleteHandler">刪除</button>
-        <div>
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th class="fs-4 fw-bold"></th>
-                        <th class="fs-4 fw-bold">中文姓名</th>
-                        <th class="fs-4 fw-bold">帳號</th>
-                        <th class="fs-4 fw-bold">密碼</th>
-                        <th class="fs-4 fw-bold">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in adminsData" v-bind:key="item.accountId">
-                        <td>
-                            <div>
-                                <input type="checkbox" v-bind:id="'checkbox-'+item.accountId" v-bind:value="item.accountId" v-bind:checked="selectedAdmin && selectedAdmin.accountId === item.accountId" v-on:change="selectAdmin(item)">
-                            </div>
-                        </td>
-                        <td>{{item.name}}</td>
-                        <td>{{item.accountId}}</td>
-                        <td>{{item.password}}</td>
-                        <td>{{item.email}}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!--管理員列表-->
+        <div class="container mt-5">
+            <div class="card shadow mx-auto table-container">
+                <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">管理員列表</h5>
+                    <div>
+                        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal" v-bind:disabled="!selectedAdmin" @click="editHandler">編輯</button>
+                        <button type="button" class="btn btn-danger" v-bind:disabled="!selectedAdmin" @click="deleteHandler">刪除</button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th></th>
+                                    <th class="fs-5 fw-bold">中文姓名</th>
+                                    <th class="fs-5 fw-bold">帳號</th>
+                                    <th class="fs-5 fw-bold">密碼</th>
+                                    <th class="fs-5 fw-bold">信箱</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in adminsData">
+                                    <td>
+                                        <input type="checkbox" v-bind:checked="selectedAdmin && selectedAdmin.accountId === item.accountId" v-on:change="selectAdmin(item)">
+                                    </td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.accountId}}</td>
+                                    <td>{{item.password}}</td>
+                                    <td>{{item.email}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!--管理員編輯Modal-->
@@ -173,31 +178,29 @@
                         <h5 class="modal-title" id="editAdminModalLabel">修改管理員資料</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                <div class="modal-body" v-if="selectedAdmin">
-                    <div>
-                        <table>
-                            <tr>
-                                <td>中文姓名</td>
-                                <td><input type="text" v-model="admin.name"></td>
-                            </tr>
-                            <tr>
-                                <td>帳號</td>
-                                <td><input type="text" v-model="admin.accountId" readonly></td>
-                            </tr>
-                            <tr>
-                                <td>密碼</td>
-                                <td><input type="text" v-model="admin.password" placeholder="若不修改請留空"></td>
-                            </tr>
-                            <tr>
-                                <td>Email</td>
-                                <td><input type="text" v-model="admin.email"></td>
-                            </tr>
-                        </table>
+
+                    <div class="modal-body" v-if="selectedAdmin">
+                        <form>
+                            <div class="mb-3">
+                                <label for="adminName" class="form-label">中文姓名*</label>
+                                <input type="text" class="form-control" id="adminName" v-model="updateAdmin.name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="adminId" class="form-label">帳號*</label>
+                                <input type="text" class="form-control" id="adminId" v-model="updateAdmin.accountId" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="adminPassword" class="form-label">密碼*</label>
+                                <input type="password" class="form-control" id="adminPassword" v-model="updateAdmin.password" placeholder="若不修改請留空">
+                            </div>
+                            <div class="mb-3">
+                                <label for="adminEmail" class="form-label">信箱*</label>
+                                <input type="text" class="form-control" id="adminEmail" v-model="updateAdmin.email">
+                            </div>
+                        </form>
+                        <div id="resultMsg"></div>
                     </div>
-                    <div>
-                        <h5>{{resultMsg}}</h5>
-                    </div>
-                </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                         <button type="button" class="btn btn-primary" id="saveButton">儲存</button>
@@ -209,129 +212,83 @@
     </fieldset>
 
     <script>
-        //管理員新增jQuery
-        $('#submitAdmin').on('click',function(){
-            let adminName = $('#createAdminName').val().trim();
-            let adminAccountId = $('#createAdminAccountId').val().trim();
-            let adminPassword = $('#createAdminPassword').val().trim();
-            let adminEmail = $('#createAdminEmail').val().trim();
-
-            if(!adminName || !adminAccountId || !adminPassword || !adminEmail){
-                $('#resultMsgAdmin').text("所有欄位皆為必填，請勿留空！");
-                return;
-            }
-
-            let admin={
-                name:adminName,
-                accountId:adminAccountId,
-                password:adminPassword,
-                email:adminEmail
-            };
-            let urlString='/api/v1/admin/register';
-            let jsonDate=JSON.stringify(admin);
-
-            $.ajax({
-                url:urlString,
-                type:'POST',
-                dataType:'json',
-                data:jsonDate,
-                contentType:'application/json',
-                beforeSend:function(xhr){
-                    xhr.setRequestHeader("Content-Type","application/json");
-                },
-                success:function(data,status,xhr){
-                    console.log(data);
-                    let successMsg=data.message;
-                    $('#resultMsgAdmin').text(successMsg);
-
-                    //刷新當前頁，更新列表資訊
-                    window.location.replace(window.location.href);
-                },
-                error:function(xhr,status,error){
-                    let errorMsg=xhr.responseJSON;
-                    console.log(errorMsg);
-                    $('#resultMsgAdmin').text(errorMsg.message);
-                }
-            })
-        })
-        //當Modal關閉，會將欄位資料清空
-        //'hidden.bs.modal'是Bootstrap event，modal隱藏完成(transition結束)後會觸發
-        $('#createAdminModal').on('hidden.bs.modal', function () {
-            $('#createAdminName').val('');
-            $('#createAdminAccountId').val('');
-            $('#createAdminPassword').val('');
-            $('#createAdminEmail').val('');
-            $('#resultMsgAdmin').text('');
-        });
-
-        //保險員新增jQuery
-        $('#submitInsurer').click(function(){   
-            let insurerName = $('#createInsurerName').val().trim();
-            let insurerAccountId = $('#createInsurerAccountId').val().trim();
-            let insurerPassword = $('#createInsurerPassword').val().trim();
-            let insurerPhone = $('#createInsurerPhone').val().trim();
-            let insurerEmail = $('#createInsurerEmail').val().trim();
-
-            // !""會被當作true
-            if(!insurerName || !insurerAccountId || !insurerPassword || !insurerPhone || !insurerEmail){
-                $('#resultMsgInsurer').text("所有欄位皆為必填，請勿留空！");
-                return;
-            }
-
-            let insurer={
-                name:insurerName,
-                accountId:insurerAccountId,
-                password:insurerPassword,
-                phone:insurerPhone,
-                email:insurerEmail
-            }
-            let urlString = '/api/v1/insurer/register';
-            let jsonDate = JSON.stringify(insurer);
-
-            $.ajax({
-                url:urlString,
-                type:'POST',                
-                data:jsonDate,
-                dataType:'json',
-                contentType:'application/json',
-                beforeSend:function(xhr){
-                    xhr.setRequestHeader("Content-Type","application/json");
-                },
-                success:function(data,status,xhr){
-                    console.log(data);
-                    let successMsg = data.message;
-                    $('#resultMsgInsurer').text(successMsg);
-                },
-                error:function(xhr,status,error){
-                    let errorMsg = xhr.responseJSON;
-                    console.log(errorMsg);
-                    $('#resultMsgInsurer').text(errorMsg.message);
-                }
-            });
-        });
-
-        $('#createInsurerModal').on('hidden.bs.modal', function () {
-            $('#createInsurerName').val('');
-            $('#createInsurerAccountId').val('');
-            $('#createInsurerPassword').val('');
-            $('#createInsurerPhone').val('');
-            $('#createInsurerEmail').val('');
-            $('#resultMsgInsurer').text('');
-        });
-
-        //管理員編輯刪除jQuery/Vue
         const dataModel = {
-            adminsData:admins,
-            selectedAdmin: null,//代表目前沒有被選中的管理員
-            admin:{},
-            resultMsg:'',
+            adminsData:[],
+            newAdmin:{
+                name:'',
+                accountId:'',
+                password:'',
+                email:''
+            },
+            selectedAdmin:null,//代表目前沒有被選中的管理員
+            updateAdmin:{},
+            deleteAdmin:{},
+            newInsurer:{
+                name:'',
+                accountId:'',
+                password:'',
+                phone:'',
+                email:''
+            }
         }
         const functions = {
+            //從後端撈Admin資料
+            fetchAdmins(){
+                $.getJSON('/api/v1/admin/findAll',(data) => {
+                    this.adminsData = data.data;
+                });
+            },
+
+            //新增管理員
+            createAdminHandler(e){
+                if(!this.newAdmin.name.trim() || !this.newAdmin.accountId.trim() || !this.newAdmin.password.trim() || !this.newAdmin.email.trim()){
+                    $('#resultMsgAdmin').text("所有欄位皆為必填，請勿留空！");
+                    return;
+                }
+
+                let urlString='/api/v1/admin/register';
+                let jsonDate=JSON.stringify(this.newAdmin);
+
+                $.ajax({
+                    url:urlString,
+                    type:'POST',
+                    dataType:'json',
+                    data:jsonDate,
+                    contentType:'application/json',
+                    beforeSend:function(xhr){
+                        xhr.setRequestHeader("Content-Type","application/json");
+                    },
+                    success:(data,status,xhr) => {
+                        console.log(data);
+                        let successMsg=data.message;
+                        $('#resultMsgAdmin').text(successMsg);
+                        this.fetchAdmins();
+                    },
+                    error:(xhr,status,error) => {
+                        let errorMsg=xhr.responseJSON;
+                        console.log(errorMsg);
+                        $('#resultMsgAdmin').text(errorMsg.message);
+                    }
+                })
+            },
+
+            //新增管理員-開啟model先清上一次殘留資料
+            resetAdminForm(e) {
+                this.newAdmin = {
+                    name:'',
+                    accountId:'',
+                    password:'',
+                    email:''
+                };
+                $('#resultMsgAdmin').text('');
+            },
+
             //取消勾選功能
             selectAdmin(item){
                 if(this.selectedAdmin && this.selectedAdmin.accountId === item.accountId){
                     this.selectedAdmin = null;// 如果點到同一個，取消選取
-                }else{
+                }
+                else{
                     this.selectedAdmin = item;// 選取新的
                 }
             },
@@ -341,12 +298,18 @@
                 console.log("要編輯的帳號：", this.selectedAdmin.accountId);
                 console.log("要編輯的資料：", this.selectedAdmin);
 
-                this.resultMsg = '';
-                this.admin = JSON.parse(JSON.stringify(this.selectedAdmin));//進行副本編輯
-                this.admin.password = '';
+                $('#resultMsg').text('');
+                this.updateAdmin = JSON.parse(JSON.stringify(this.selectedAdmin));//進行副本編輯
+                //清空密碼欄位，確保送出時如果沒填就是空的
+                this.updateAdmin.password = '';
                 $('#saveButton').off('click').on('click', () => {
+                    if(!this.updateAdmin.name.trim() || !this.updateAdmin.accountId.trim() || !this.updateAdmin.email.trim()){
+                        $('#resultMsg').text('*號為必填欄位，請勿留空！');
+                        return;
+                    }
+
                     let urlString = '/api/v1/admin/update';
-                    let jsonData = JSON.stringify(this.admin);
+                    let jsonData = JSON.stringify(this.updateAdmin);
                     $.ajax({
                         url:urlString,
                         type:'PUT',
@@ -356,19 +319,15 @@
                         success:(data,status,xhr) => {
                             console.log(data);
                             let successMsg = data.message;
-                            this.resultMsg = successMsg;
-                            //將編輯後的資料覆蓋回去
-                            // let index = this.adminsData.findIndex(a => a.accountId === this.admin.accountId);
-                            // this.adminsData[index] = JSON.parse(JSON.stringify(this.admin));
-                            //刷新當前頁，更新列表資訊
-                            window.location.replace(window.location.href);
+                            $('#resultMsg').text(successMsg);
+                            this.fetchAdmins();
                             //同步更新selectedAdmin
-                            this.selectedAdmin = this.adminsData[index];
+                            this.selectedAdmin = this.updateAdmin;
                         },
                         error:(xhr,status,error) => {
                             let errorMsg = xhr.responseJSON;
                             console.log(errorMsg);
-                            this.resultMsg = errorMsg;
+                            $('#resultMsg').text(errorMsg);
                         }
                     })
                 });
@@ -380,12 +339,11 @@
                 console.log("要刪除的帳號：", this.selectedAdmin.accountId);
                 console.log("要刪除的資料：", this.selectedAdmin);
 
-                let index = this.adminsData.findIndex(a => a.accountId === this.selectedAdmin.accountId);
-                this.admin = this.adminsData[index]
+                this.deleteAdmin = this.selectedAdmin;
 
                 Swal.fire({
                     title: "確定刪除嗎？",
-                    text: "刪除管理員帳號：" + this.admin.accountId,
+                    text: "刪除管理員帳號：" + this.deleteAdmin.accountId,
                     icon: "warning",
                     confirmButtonText: "刪除",
                     confirmButtonColor: "#3085d6",
@@ -396,7 +354,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         console.log("刪除作業");
-                        let urlString = '/api/v1/admin/delete/' + this.admin.accountId;
+                        let urlString = '/api/v1/admin/delete/' + this.deleteAdmin.accountId;
                         $.ajax({
                             url:urlString,
                             type:'DELETE',
@@ -411,7 +369,7 @@
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
-                                this.adminsData.splice(index,1)
+                                this.fetchAdmins();
                                 this.selectedAdmin = null;
                             },
                             error:(xhr,status,error) => {
@@ -432,6 +390,50 @@
                 });
 
             },
+
+            //新增保險員
+            createInsurerHandler(e){
+                if(!this.newInsurer.name.trim() || !this.newInsurer.accountId.trim() || !this.newInsurer.password.trim() || !this.newInsurer.phone.trim() || !this.newInsurer.email.trim()){
+                    $('#resultMsgInsurer').text("所有欄位皆為必填，請勿留空！");
+                    return;
+                }
+
+                let urlString = '/api/v1/insurer/register';
+                let jsonDate = JSON.stringify(this.newInsurer);
+
+                $.ajax({
+                    url:urlString,
+                    type:'POST',                
+                    data:jsonDate,
+                    dataType:'json',
+                    contentType:'application/json',
+                    beforeSend:function(xhr){
+                        xhr.setRequestHeader("Content-Type","application/json");
+                    },
+                    success:(data,status,xhr) => {
+                        console.log(data);
+                        let successMsg = data.message;
+                        $('#resultMsgInsurer').text(successMsg);
+                    },
+                    error:(xhr,status,error) => {
+                        let errorMsg = xhr.responseJSON;
+                        console.log(errorMsg);
+                        $('#resultMsgInsurer').text(errorMsg.message);
+                    }
+                });
+
+            },
+            //新增保險員-開啟model先清上一次殘留資料
+            resetInsurerForm(e) {
+                this.newInsurer = {
+                    name:'',
+                    accountId:'',
+                    password:'',
+                    phone:'',
+                    email:''
+                };
+                $('#resultMsgInsurer').text('');
+            },
         }
 
         const app = Vue.createApp({
@@ -439,6 +441,9 @@
                 return dataModel;
             },
             methods:functions,
+            mounted(){
+                this.fetchAdmins();//頁面第一次載入時，向後端撈資料
+            },
 
         }).mount('#app');
 

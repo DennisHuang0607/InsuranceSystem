@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project01.dto.ResponseDTO;
 import com.project01.entity.Admin;
 import com.project01.entity.Message;
+import com.project01.repository.AdminRepository;
+import com.project01.repository.PolicyRepository;
 import com.project01.service.AdminService;
 
 @RestController
@@ -43,7 +45,7 @@ public class AdminController {
 	}
 	
 	//查詢所有管理員
-	@GetMapping(path = "/findall",produces = "application/json")
+	@GetMapping(path = "/findAll",produces = "application/json")
 	public ResponseEntity<ResponseDTO<List<Admin>>> findAllAdminController(){
 		ResponseEntity<ResponseDTO<List<Admin>>> response = adminService.findAllAdmin();
 		return response;
