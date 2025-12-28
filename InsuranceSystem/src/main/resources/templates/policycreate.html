@@ -636,6 +636,7 @@
                     console.log(data);
                     let successMsg = data.message;
                     $('#resultMsgType').text(successMsg);
+                    window.dispatchEvent(new Event('typeUpdated'));
                 },
                 error:(xhr,status,error) => {
                     let errorMsg = xhr.responseJSON.message;
@@ -1145,6 +1146,9 @@
             this.fetchCurrentInsurer();
             window.addEventListener('companyUpdated', () => {
                 this.fetchCompanies();
+            });
+            window.addEventListener('typeUpdated', () => {
+                this.fetchTypes();
             });
         },
 
