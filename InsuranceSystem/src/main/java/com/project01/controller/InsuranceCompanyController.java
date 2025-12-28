@@ -59,7 +59,7 @@ public class InsuranceCompanyController {
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<ResponseDTO<InsuranceCompany>> deleteInsuranceCompanyController(@PathVariable("id") int companyId) {
+	public ResponseEntity<ResponseDTO<InsuranceCompany>> deleteInsuranceCompanyController(@PathVariable("id") long companyId) {
 		return  insuranceCompanyService.deleteInsuranceCompany(companyId);
 	}
 

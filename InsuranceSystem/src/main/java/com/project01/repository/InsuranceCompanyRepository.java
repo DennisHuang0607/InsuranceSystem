@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.project01.entity.InsuranceCompany;
 
-public interface InsuranceCompanyRepository extends JpaRepository<InsuranceCompany, Integer>{
+public interface InsuranceCompanyRepository extends JpaRepository<InsuranceCompany, Long>{
 	
 	//新增InsuranceCompany
 	InsuranceCompany save(InsuranceCompany company);
@@ -18,12 +18,12 @@ public interface InsuranceCompanyRepository extends JpaRepository<InsuranceCompa
 	InsuranceCompany findByCompanyName(String companyName);
 	
 	//查詢InsuranceCompany是否存在(用companyId)
-	boolean existsByCompanyId(int companyId);
+	boolean existsByCompanyId(long companyId);
 	
 	//查詢InsuranceCompany是否存在(用companyName)
 	boolean existsByCompanyName(String companyName);
 	
 	//刪除InsuranceCompany
-	void deleteByCompanyId(int companyId);
+	void deleteByCompanyId(long companyId);
 	
 }

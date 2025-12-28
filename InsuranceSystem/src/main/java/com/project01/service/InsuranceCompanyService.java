@@ -97,7 +97,7 @@ public class InsuranceCompanyService {
 	
 	//刪除保險公司
 	@Transactional(rollbackFor = Exception.class)
-	public ResponseEntity<ResponseDTO<InsuranceCompany>> deleteInsuranceCompany(int companyId){
+	public ResponseEntity<ResponseDTO<InsuranceCompany>> deleteInsuranceCompany(long companyId){
 
 		try {
 			if(insuranceCompanyRepository.existsByCompanyId(companyId)) {

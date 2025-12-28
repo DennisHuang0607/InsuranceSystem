@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.project01.entity.PolicyPerson;
 
-public interface PolicyPersonRepository extends JpaRepository<PolicyPerson, Integer>{
+public interface PolicyPersonRepository extends JpaRepository<PolicyPerson, Long>{
 
 	//新增PolicyPerson
 	PolicyPerson save(PolicyPerson person);
@@ -18,12 +18,12 @@ public interface PolicyPersonRepository extends JpaRepository<PolicyPerson, Inte
 	PolicyPerson findByIdNumber(String IdNumber);
 	
 	//查詢PolicyPerson是否存在(personId)
-	boolean existsByPersonId(int personId);
+	boolean existsByPersonId(long personId);
 	
 	//查詢PolicyPerson是否存在(idNumber)
 	boolean existsByIdNumber(String idNumber);
 	
 	//刪除PolicyPerson
-	void deleteByPersonId(int personId);
+	void deleteByPersonId(long personId);
 	
 }

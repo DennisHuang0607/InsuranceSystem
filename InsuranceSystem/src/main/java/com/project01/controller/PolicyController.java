@@ -64,7 +64,7 @@ public class PolicyController {
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<ResponseDTO<Policy>> deletePolicy(@PathVariable("id") int policyId){
+	public ResponseEntity<ResponseDTO<Policy>> deletePolicy(@PathVariable("id") long policyId){
 		return policyService.deletePolicy(policyId);
 	}
 	

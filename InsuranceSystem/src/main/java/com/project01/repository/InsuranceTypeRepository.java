@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.project01.entity.InsuranceType;
 
-public interface InsuranceTypeRepository extends JpaRepository<InsuranceType, Integer> {
+public interface InsuranceTypeRepository extends JpaRepository<InsuranceType, Long> {
 	
 	//新增InsuranceType
 	InsuranceType save(InsuranceType type);
@@ -21,10 +21,10 @@ public interface InsuranceTypeRepository extends JpaRepository<InsuranceType, In
 	boolean existsByTypeName(String typeName);
 	
 	//查詢InsuranceType是否存在(用typeId)
-	boolean existsByTypeId(int typeId);
+	boolean existsByTypeId(long typeId);
 	
 	//刪除InsuranceType
-	void deleteByTypeId(int typeId);
+	void deleteByTypeId(long typeId);
 	
 	
 }

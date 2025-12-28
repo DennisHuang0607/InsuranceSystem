@@ -55,7 +55,7 @@ public class InsuranceTypeController {
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<ResponseDTO<InsuranceType>> deleteInsuranceTypeController(@PathVariable("id") int typeId){
+	public ResponseEntity<ResponseDTO<InsuranceType>> deleteInsuranceTypeController(@PathVariable("id") long typeId){
 		return insuranceTypeService.deleteInsuranceType(typeId);
 	}
 	

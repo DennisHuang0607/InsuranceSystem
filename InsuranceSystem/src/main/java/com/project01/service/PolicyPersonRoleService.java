@@ -23,7 +23,7 @@ public class PolicyPersonRoleService {
 	
 	//新增保單角色
 //	@Transactional(rollbackFor = Exception.class)
-//	public ResponseEntity<ResponseDTO<PolicyPersonRole>> registerRole(int policyId, int personId, String role){
+//	public ResponseEntity<ResponseDTO<PolicyPersonRole>> registerRole(long policyId,long personId,String role){
 //		try {
 //			if (!policyRepository.existsByPolicyId(policyId)) {
 //				ResponseDTO<PolicyPersonRole> response = new ResponseDTO<>(404,"保單不存在",null);
@@ -58,7 +58,7 @@ public class PolicyPersonRoleService {
 	
 	//新增保單角色
 	@Transactional(rollbackFor = Exception.class)
-	public PolicyPersonRole registerRole(int policyId, int personId, String role){
+	public PolicyPersonRole registerRole(long policyId, long personId, String role){
 		Policy policyRef = policyRepository.getReferenceById(policyId);
         PolicyPerson personRef = policyPersonRepository.getReferenceById(personId);
         

@@ -99,7 +99,7 @@ public class InsuranceTypeService {
 	
 	//刪除保單類型
 	@Transactional(rollbackFor = Exception.class)
-	public ResponseEntity<ResponseDTO<InsuranceType>> deleteInsuranceType(int typeId){
+	public ResponseEntity<ResponseDTO<InsuranceType>> deleteInsuranceType(long typeId){
 		
 		try {
 			if(insuranceTypeRepository.existsByTypeId(typeId)) {

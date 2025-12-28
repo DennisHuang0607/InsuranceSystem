@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.project01.entity.Policy;
 
-public interface PolicyRepository extends JpaRepository<Policy, Integer>{
+public interface PolicyRepository extends JpaRepository<Policy, Long>{
 	
 	//新增Policy
 	Policy save(Policy policy);
@@ -16,10 +16,10 @@ public interface PolicyRepository extends JpaRepository<Policy, Integer>{
 	List<Policy> findAll();
 	
 	//查詢Policy是否存在(policyId)
-	boolean existsByPolicyId(int policyId);
+	boolean existsByPolicyId(long policyId);
 	
 	//刪除Policy
-	void deleteByPolicyId(int policyId);
+	void deleteByPolicyId(long policyId);
 	
 	//使用JOIN FETCH一次把關聯的人員角色資料抓出來，避免N+1
     @Query("SELECT DISTINCT p FROM Policy p " +

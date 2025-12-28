@@ -22,7 +22,7 @@ public class InsuranceCompany {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "company_id")
-	private int companyId;
+	private long companyId;
 	@Column(name = "company_name", unique = true)
 	private String companyName;
 	@Column(name = "address",nullable = true)
@@ -34,10 +34,10 @@ public class InsuranceCompany {
 	private List<Policy> policies;
 	
 	
-	public int getCompanyId() {
+	public long getCompanyId() {
 		return companyId;
 	}
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(long companyId) {
 		this.companyId = companyId;
 	}
 	public String getCompanyName() {

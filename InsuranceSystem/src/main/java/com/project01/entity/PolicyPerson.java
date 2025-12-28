@@ -23,7 +23,7 @@ public class PolicyPerson {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "person_id")
-	private int personId;
+	private long personId;
 	@Column(name = "name")
 	private String name;
 	@Column(name = "id_number",unique = true)
@@ -44,10 +44,10 @@ public class PolicyPerson {
 	@JsonIgnore
 	private List<PolicyPersonRole> roles;
 	
-	public int getPersonId() {
+	public long getPersonId() {
 		return personId;
 	}
-	public void setPersonId(int personId) {
+	public void setPersonId(long personId) {
 		this.personId = personId;
 	}
 	public String getName() {

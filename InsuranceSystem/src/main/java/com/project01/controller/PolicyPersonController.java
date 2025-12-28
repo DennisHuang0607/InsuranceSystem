@@ -55,7 +55,7 @@ public class PolicyPersonController {
 	}
 	
 	@DeleteMapping(path = "/delete/{id}",produces = "application/json")
-	public ResponseEntity<ResponseDTO<PolicyPerson>>  deletePolicyPersonController(@PathVariable("id") int personId){
+	public ResponseEntity<ResponseDTO<PolicyPerson>>  deletePolicyPersonController(@PathVariable("id") long personId){
 		return policyPersonService.deletePolicyPerson(personId);
 	}
 	

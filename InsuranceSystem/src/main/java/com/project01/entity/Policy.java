@@ -31,7 +31,7 @@ public class Policy {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "policy_id")
-	private int policyId;
+	private long policyId;
 	@Column(name = "policy_number", unique = true)
 	private String policyNumber;
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -62,10 +62,10 @@ public class Policy {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler","policy"})
     private List<PolicyPersonRole> policyPersonRoles;
 	
-	public int getPolicyId() {
+	public long getPolicyId() {
 		return policyId;
 	}
-	public void setPolicyId(int policyId) {
+	public void setPolicyId(long policyId) {
 		this.policyId = policyId;
 	}
 	public String getPolicyNumber() {

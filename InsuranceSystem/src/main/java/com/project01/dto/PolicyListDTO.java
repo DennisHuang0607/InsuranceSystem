@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class PolicyListDTO {
-	private int policyId;
+	private long policyId;
     private String policyNumber;
     private String insuranceType;
     private String insuranceCompany;
@@ -18,10 +18,10 @@ public class PolicyListDTO {
     private String insured;
     private String beneficiary;
     
-	public int getPolicyId() {
+	public long getPolicyId() {
 		return policyId;
 	}
-	public void setPolicyId(int policyId) {
+	public void setPolicyId(long policyId) {
 		this.policyId = policyId;
 	}
 	public String getPolicyNumber() {

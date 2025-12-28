@@ -27,7 +27,7 @@ public class PolicyPersonRoleController {
 	};
 	
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
-	public ResponseEntity<ResponseDTO<PolicyPersonRole>> registerRoleController(@RequestBody int policyId, @RequestBody int personId, @RequestBody String role){
+	public ResponseEntity<ResponseDTO<PolicyPersonRole>> registerRoleController(@RequestBody long policyId, @RequestBody long personId, @RequestBody String role){
 		try {
 			PolicyPersonRole newRole = policyPersonRoleService.registerRole(policyId, personId, role);
 			ResponseDTO<PolicyPersonRole> response = new ResponseDTO<PolicyPersonRole>(200,"新增保單角色成功",newRole);

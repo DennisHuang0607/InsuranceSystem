@@ -22,7 +22,7 @@ public class InsuranceType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "insurance_type_id")
-	private int typeId;
+	private long typeId;
 	@Column(name = "type_name", unique = true)
 	private String typeName;
 	@Column(name = "description",nullable = true)
@@ -31,10 +31,10 @@ public class InsuranceType {
 	@JsonIgnore
 	private List<Policy> policies;
 	
-	public int getTypeId() {
+	public long getTypeId() {
 		return typeId;
 	}
-	public void setTypeId(int typeId) {
+	public void setTypeId(long typeId) {
 		this.typeId = typeId;
 	}
 	public String getTypeName() {

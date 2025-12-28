@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.project01.entity.PolicyPersonRole;
 
-public interface PolicyPersonRoleRepository extends JpaRepository<PolicyPersonRole, Integer>{
+public interface PolicyPersonRoleRepository extends JpaRepository<PolicyPersonRole, Long>{
 
 	
 	//新增PolicyPersonRole
@@ -15,10 +15,10 @@ public interface PolicyPersonRoleRepository extends JpaRepository<PolicyPersonRo
 	//List<PolicyPersonRole> findAll();
 	
 	//查詢PolicyPersonRole是否存在(id)
-	//boolean existsById(int id);
+	//boolean existsById(long id);
 	
 	//刪除Policy
-	//void deleteById(int id);
+	//void deleteById(long id);
 	
 	
 }

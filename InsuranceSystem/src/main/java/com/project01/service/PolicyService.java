@@ -95,7 +95,7 @@ public class PolicyService {
 	
 	//刪除Policy
 	@Transactional(rollbackFor = Exception.class)
-	public ResponseEntity<ResponseDTO<Policy>> deletePolicy(int policyId){
+	public ResponseEntity<ResponseDTO<Policy>> deletePolicy(long policyId){
 		try {
 			if(policyRepository.existsByPolicyId(policyId)) {
 				policyRepository.deleteByPolicyId(policyId);
@@ -133,7 +133,7 @@ public class PolicyService {
             policy.setPolicyNumber(newPolicyNumber);
 
             Policy newPolicy = policyRepository.save(policy);
-            int newPolicyId = newPolicy.getPolicyId();
+            long newPolicyId = newPolicy.getPolicyId();
 
             //取得每一個角色並儲存
             for (PolicyRolesDTO role:request.getPolicyRoles()) {

@@ -95,7 +95,7 @@ public class PolicyPersonService {
 	
 	//刪除PolicyPerson
 	@Transactional(rollbackFor = Exception.class)
-	public ResponseEntity<ResponseDTO<PolicyPerson>> deletePolicyPerson(int personId){
+	public ResponseEntity<ResponseDTO<PolicyPerson>> deletePolicyPerson(long personId){
 		try {
 			if(policyPersonRepository.existsByPersonId(personId)) {
 				policyPersonRepository.deleteByPersonId(personId);
