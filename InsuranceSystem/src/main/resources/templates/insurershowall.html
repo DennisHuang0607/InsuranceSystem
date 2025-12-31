@@ -357,7 +357,15 @@
                 //清空密碼欄位，確保送出時如果沒填就是空的
                 this.updateInsurer.password = "";
                 $('#saveButton').off('click').on('click', () => {
-                    if(!this.updateInsurer.name.trim() || !this.updateInsurer.accountId.trim() || !this.updateInsurer.phone.trim() || !this.updateInsurer.email.trim()){
+                    if(this.updateInsurer.name.trim() === this.selectedInsurer.name.trim() && 
+                    this.updateInsurer.accountId.trim() === this.selectedInsurer.accountId.trim() && 
+                    this.updateInsurer.password.trim() === '' && 
+                    this.updateInsurer.phone.trim() === this.selectedInsurer.phone.trim() && 
+                    this.updateInsurer.email.trim() === this.selectedInsurer.email.trim()){
+                        $('#resultMsg').text('資料無異動');
+                        return;
+                    }
+                    else if(!this.updateInsurer.name.trim() || !this.updateInsurer.accountId.trim() || !this.updateInsurer.phone.trim() || !this.updateInsurer.email.trim()){
                         $('#resultMsg').text('*號為必填欄位，請勿留空！');
                         return;
                     }
@@ -373,9 +381,9 @@
                             console.log(data);
                             let successMsg = data.message;
                             $('#resultMsg').text(successMsg);
-                            this.fetchInsurers();
                             //同步更新selectedInsurer
-                            this.selectedInsurer = this.updateInsurer;
+                            this.selectedInsurer = JSON.parse(JSON.stringify(this.updateInsurer));
+                            this.fetchInsurers();
                         },
                         error:(xhr,status,error) => {
                             let errorMsg = xhr.responseJSON;

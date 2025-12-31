@@ -226,7 +226,12 @@
             $('#resultMsg').text('');
             
             $('#saveButton').off('click').on('click',() => {
-                if(!this.updateType.typeName.trim()){
+                if(this.updateType.typeName.trim() === this.selectedType.typeName.trim() && 
+                this.updateType.description.trim() === this.selectedType.description.trim()){
+                    $('#resultMsg').text('資料無異動');
+                    return;
+                }
+                else if(!this.updateType.typeName.trim()){
                     $('#resultMsg').text('保單類型為必填欄位，請勿留空！');
                     return;
                 }

@@ -303,7 +303,14 @@
                 //清空密碼欄位，確保送出時如果沒填就是空的
                 this.updateAdmin.password = '';
                 $('#saveButton').off('click').on('click', () => {
-                    if(!this.updateAdmin.name.trim() || !this.updateAdmin.accountId.trim() || !this.updateAdmin.email.trim()){
+                    if(this.updateAdmin.name.trim() === this.selectedAdmin.name.trim() && 
+                    this.updateAdmin.accountId.trim() === this.selectedAdmin.accountId.trim() && 
+                    this.updateAdmin.password.trim() === '' && 
+                    this.updateAdmin.email.trim() === this.selectedAdmin.email.trim()){
+                        $('#resultMsg').text('資料無異動');
+                        return;
+                    }
+                    else if(!this.updateAdmin.name.trim() || !this.updateAdmin.accountId.trim() || !this.updateAdmin.email.trim()){
                         $('#resultMsg').text('*號為必填欄位，請勿留空！');
                         return;
                     }
@@ -320,9 +327,9 @@
                             console.log(data);
                             let successMsg = data.message;
                             $('#resultMsg').text(successMsg);
-                            this.fetchAdmins();
                             //同步更新selectedAdmin
-                            this.selectedAdmin = this.updateAdmin;
+                            this.selectedAdmin = JSON.parse(JSON.stringify(this.updateAdmin));
+                            this.fetchAdmins();
                         },
                         error:(xhr,status,error) => {
                             let errorMsg = xhr.responseJSON;

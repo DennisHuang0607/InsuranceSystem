@@ -260,8 +260,18 @@
             
             this.updatePerson = JSON.parse(JSON.stringify(this.selectedPerson));
             $('#saveButton').off('click').on('click', () => {
-
-                if(!this.updatePerson.name.trim() || !this.updatePerson.idNumber.trim() || !this.updatePerson.birthDate.trim() || !this.updatePerson.phone.trim()){
+                if(this.updatePerson.name.trim() === this.selectedPerson.name.trim() && 
+                this.updatePerson.idNumber.trim() === this.selectedPerson.idNumber.trim() && 
+                this.updatePerson.gender.trim() === this.selectedPerson.gender.trim() && 
+                this.updatePerson.birthDate.trim() === this.selectedPerson.birthDate.trim() && 
+                this.updatePerson.phone.trim() === this.selectedPerson.phone.trim() && 
+                this.updatePerson.email.trim() === this.selectedPerson.email.trim() && 
+                this.updatePerson.address.trim() === this.selectedPerson.address.trim() && 
+                this.updatePerson.occupation.trim() === this.selectedPerson.occupation.trim()){
+                    $('#resultMsg').text("資料無異動");
+                    return;
+                }
+                else if(!this.updatePerson.name.trim() || !this.updatePerson.idNumber.trim() || !this.updatePerson.birthDate.trim() || !this.updatePerson.phone.trim()){
                     $('#resultMsg').text("*為必填欄位，請勿留空！");
                     return;
                 }

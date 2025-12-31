@@ -231,8 +231,13 @@
             
             this.updateCompany = JSON.parse(JSON.stringify(this.selectedCompany));
             $('#saveButton').off('click').on('click', () => {
-
-                if(!this.updateCompany.companyName.trim()){
+                if(this.updateCompany.companyName.trim() === this.selectedCompany.companyName.trim() && 
+                this.updateCompany.address.trim() === this.selectedCompany.address.trim() && 
+                this.updateCompany.telephone.trim() === this.selectedCompany.telephone.trim()){
+                    $('#resultMsg').text('資料無異動');
+                    return;
+                }
+                else if(!this.updateCompany.companyName.trim()){
                     $('#resultMsg').text("公司名稱為必填欄位，請勿留空！");
                     return;
                 }
