@@ -1,6 +1,8 @@
 package com.project01.controller;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project01.dto.ResponseDTO;
 import com.project01.entity.PolicyPerson;
 import com.project01.repository.PolicyPersonRepository;
+import com.project01.service.InsurerDetailsService;
 import com.project01.service.PolicyPersonService;
 
 @RestController
 @RequestMapping(path = "/api/v1/policyPerson")
 public class PolicyPersonController {
+
+    private final InsurerDetailsService insurerDetailsService;
 	private static final Logger logger = LoggerFactory.getLogger(PolicyPersonController.class);
 	
 	@Autowired
@@ -30,8 +35,9 @@ public class PolicyPersonController {
 	@Autowired
 	private PolicyPersonRepository policyPersonRepository;
 	
-	public PolicyPersonController() {
+	public PolicyPersonController(InsurerDetailsService insurerDetailsService) {
 		logger.info("PolicyPerson Controller 已配置...");
+		this.insurerDetailsService = insurerDetailsService;
 	}
 	
 	@PostMapping(path = "/register",consumes = "application/json",produces = "application/json")
@@ -46,7 +52,8 @@ public class PolicyPersonController {
 	
 	@GetMapping(path = "/showAll",produces = "application/json")
 	public List<PolicyPerson> showAllPolicyPersonController(){
-		return policyPersonRepository.findAll();
+		List<PolicyPerson> personList = policyPersonRepository.findAll();
+		return personList;
 	}
 	
 	@PutMapping(path = "/update",consumes = "application/json",produces = "application/json")

@@ -254,8 +254,8 @@
                         console.log(data);
                         successMsg = data.message;
                         $('#resultMsg').text(successMsg);
+                        this.selectedCompany = JSON.parse(JSON.stringify(this.updateCompany));
                         this.fetchCompanies();
-                        this.selectedCompany = this.updateCompany;
                     },
                     error:(xhr,status,error) => {
                         errorMsg = xhr.responseJSON.message;

@@ -248,7 +248,7 @@
                         console.log(data);
                         successMsg = data.message;
                         $('#resultMsg').text(successMsg);
-                        this.selectedType = this.updateType;
+                        this.selectedType = JSON.parse(JSON.stringify(this.updateType));
                         this.fetchTypes();
                     },
                     error:(xhr,status,error) => {

@@ -149,7 +149,7 @@
                                     <td v-show="isShow">{{item.personId}}</td>
                                     <td>{{item.name}}</td>
                                     <td>{{item.idNumber}}</td>
-                                    <td>{{item.gender}}</td>
+                                    <td>{{genderText(item.gender)}}</td>
                                     <td>{{item.birthDate}}</td>
                                     <td>{{item.phone}}</td>
                                     <td>{{item.email}}</td>
@@ -183,7 +183,10 @@
                             </div>
                             <div class="mb-3">
                                 <label for="personGender" class="form-label">性別</label>
-                                <input type="text" class="form-control" id="personGender" v-model="updatePerson.gender">
+                                <select class="form-select" id="personGender" v-model="updatePerson.gender">
+                                    <option value="M">男</option>
+                                    <option value="F">女</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="personBirthDate" class="form-label">生日*</label>
@@ -288,8 +291,8 @@
                         console.log(data);
                         successMsg = data.message;
                         $('#resultMsg').text(successMsg);
+                        this.selectedPerson = JSON.parse(JSON.stringify(this.updatePerson));
                         this.fetchPersons();
-                        this.selectedPerson = this.updatePerson;
                     },
                     error:(xhr,status,error) => {
                         errorMsg = xhr.responseJSON.message;
@@ -383,6 +386,10 @@
                     $('#resultMsgCompany').text(errorMsg.message);
                 }
             })
+        },
+        //性別代號(M/F)轉換
+        genderText(g) {
+            return g === 'M' ? '男' : g === 'F' ? '女' : '';
         },
         //新增保險公司-開啟model先清上一次殘留資料
         resetCompanyForm(e) {
