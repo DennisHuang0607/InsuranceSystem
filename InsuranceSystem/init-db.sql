@@ -11,6 +11,26 @@ GO
 USE [insurancesystem];
 GO
 
+-- 2.1 創建 Sequence (解決高併發流水號問題) [新增內容]
+
+-- 用於保單編號 (PolicyNumber)，起始值為 1，每次遞增 1
+IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'seq_PolicyNumber')
+    DROP SEQUENCE seq_PolicyNumber;
+GO
+CREATE SEQUENCE seq_PolicyNumber
+    START WITH 1
+    INCREMENT BY 1;
+GO
+
+-- 用於保險員編號 (InsurerId)，起始值為 2 (因為初始資料已佔用 INS000001)
+IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'seq_InsurerId')
+    DROP SEQUENCE seq_InsurerId;
+GO
+CREATE SEQUENCE seq_InsurerId
+    START WITH 2
+    INCREMENT BY 1;
+GO
+
 --3. 創建表格結構
 
 --Table [dbo].[Admin]
