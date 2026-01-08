@@ -54,7 +54,7 @@ API設計：RESTful
 
 互動元件：SweetAlert2
 
-UI框架：Bootstrap5\
+UI框架：Bootstrap5
 
 ----------------
 
