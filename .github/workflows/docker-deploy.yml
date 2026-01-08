@@ -8,6 +8,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # --- 1. 基礎環境設定 ---
       - uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -17,9 +18,12 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      # --- 2. 建置與打包 ---
       - name: Build with Maven
+        # 跳過測試以節省部署時間
         run: mvn -f InsuranceSystem/pom.xml clean package -DskipTests
 
+      # --- 3. Docker 映像檔處理 ---
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -33,6 +37,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/insurance-system:latest
 
+      # --- 4. 上傳 SQL 檔案 ---
       - name: Copy SQL file to AWS
         uses: appleboy/scp-action@master
         with:
@@ -41,65 +46,81 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "InsuranceSystem/init-db.sql"
           target: "/home/${{ secrets.SERVER_USER }}/deploy"
-          strip_components: 1
+          strip_components: 1 # 去掉 InsuranceSystem 資料夾層級，直接放在 deploy 下
 
-      - name: Deploy to EC2 (Debug Mode)
+      # --- 5. 遠端部署 (核心步驟) ---
+      - name: Deploy to EC2 (Stable Version)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # --- 環境準備 ---
+            # ==========================================
+            # 步驟 1: 網路與環境準備
+            # ==========================================
+            # 建立 Docker 內部網路，讓 App 和 DB 可以用名稱互連
             docker network create insurance-net || true
 
-            # --- 清理 ---
-            echo "Removing old containers..."
+            # ==========================================
+            # 步驟 2: 清理舊環境 (暴力重置)
+            # ==========================================
+            echo "正在停止並刪除舊容器..."
             docker stop insurance-app || true
             docker rm insurance-app || true
             docker stop mssql-db || true
             docker rm mssql-db || true
+
+            # [重要] 刪除資料庫 Volume，確保資料歸零，讓 init-db.sql 能重新跑
+            echo "正在刪除舊資料庫 Volume..."
             docker volume rm mssql_data || true
 
-            # --- 啟動 DB ---
-            echo "Starting MSSQL..."
+            # ==========================================
+            # 步驟 3: 啟動資料庫 (使用 Azure SQL Edge)
+            # ==========================================
+            # 改用 Azure SQL Edge 以解決 AWS t2.micro 記憶體不足的問題
+            echo "正在啟動 Azure SQL Edge..."
             docker run -d \
               --name mssql-db \
               --network insurance-net \
               -e "ACCEPT_EULA=Y" \
-              -e "SA_PASSWORD=${{ secrets.DB_PASSWORD }}" \
+              -e "MSSQL_SA_PASSWORD=${{ secrets.DB_PASSWORD }}" \
               -p 1433:1433 \
               -v mssql_data:/var/opt/mssql \
               -v /home/${{ secrets.SERVER_USER }}/deploy/init-db.sql:/tmp/init-db.sql \
-              mcr.microsoft.com/mssql/server:2022-latest
+              mcr.microsoft.com/azure-sql-edge:latest
 
-            # --- [除錯重點] 檢查 DB 是否活著 ---
-            echo "Wait 45s for DB startup..."
-            sleep 45 
+            # ==========================================
+            # 步驟 4: 等待資料庫啟動
+            # ==========================================
+            echo "等待資料庫啟動 (30秒)..."
+            sleep 30 
             
-            echo "Check DB container status:"
-            docker ps -a | grep mssql-db
-
-            # 如果容器死掉了，印出日誌讓我們知道為什麼 (例如密碼太簡單)
+            # 檢查容器狀態，如果死掉了就印出 Log 並報錯
             if [ "$(docker inspect -f '{{.State.Running}}' mssql-db)" = "false" ]; then
-                echo "❌ CRITICAL ERROR: Database container crashed!"
+                echo "❌ 嚴重錯誤: 資料庫容器啟動失敗！"
                 echo "--- DB LOGS START ---"
                 docker logs mssql-db
                 echo "--- DB LOGS END ---"
                 exit 1
             fi
 
-            # --- 執行 SQL ---
-            echo "Running init-db.sql..."
-            # 這裡加上詳細錯誤輸出 (-b OnError)
+            # ==========================================
+            # 步驟 5: 執行 SQL 初始化腳本
+            # ==========================================
+            echo "正在執行 init-db.sql..."
+            # 使用 sqlcmd 匯入資料，若失敗 (-b) 會中斷部署
             docker exec mssql-db /opt/mssql-tools/bin/sqlcmd \
               -S localhost -U sa -P "${{ secrets.DB_PASSWORD }}" \
               -i /tmp/init-db.sql -b
 
-            # --- 啟動 App ---
-            echo "Starting App..."
+            # ==========================================
+            # 步驟 6: 啟動 Java 應用程式
+            # ==========================================
+            echo "正在更新應用程式 Image..."
             docker pull ${{ secrets.DOCKER_USERNAME }}/insurance-system:latest
             
+            echo "正在啟動應用程式..."
             docker run -d \
               --name insurance-app \
               --network insurance-net \
@@ -109,3 +130,5 @@ jobs:
               -e SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}" \
               --restart unless-stopped \
               ${{ secrets.DOCKER_USERNAME }}/insurance-system:latest
+            
+            echo "✅ 部署完成！"
