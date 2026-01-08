@@ -62,7 +62,17 @@ UI框架：Bootstrap5
 
 版本控制：Git
 
+原始碼倉庫：GitHub
+
+CI/CD 工具：GitHub Actions
+
 容器化：Docker、Docker Compose
+
+映像檔倉庫：Docker Hub
+
+雲端平台：AWS EC2 (Ubuntu)
+
+資料庫：Azure SQL Edge
 
 -------------
 
@@ -76,7 +86,7 @@ B.於GitHub下載專案並解壓縮，下載路徑：https://github.com/DennisHu
 
 啟動步驟：
 
-C.設定環境變數：在專案根目錄建立.env檔案，並設定資料庫密碼(大寫+小寫+數字+特殊符號+至少八個字元)->SA\_PASSWORD=*你的密碼*
+C.設定環境變數：在專案根目錄建立.env檔案，並設定資料庫密碼(大寫+小寫+數字+特殊符號+至少八個字元)->SA_PASSWORD=*你的密碼*
 
 D.打包專案：./mvnw clean package -DskipTests (請透過Windows PowerShell執行)
 
