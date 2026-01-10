@@ -46,15 +46,21 @@ API設計：RESTful
 
 依賴管理：Maven
 
+開發工具：STS4
+
 -------------
 
 前端技術
 
-核心邏輯：Vue3、JQuery、AJAX
+核心邏輯：Vue3、JQuery
+
+非同步技術：AJAX
 
 互動元件：SweetAlert2
 
 UI框架：Bootstrap5
+
+開發工具：VS Code
 
 ----------------
 
