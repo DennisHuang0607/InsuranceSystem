@@ -13,12 +13,12 @@ GO
 
 -- 2.1 創建 Sequence (解決高併發流水號問題) [新增內容]
 
--- 用於保單編號 (PolicyNumber)，起始值為 1，每次遞增 1
+-- 用於保單編號 (PolicyNumber)，起始值為 2(因為初始資料已佔用 1)，每次遞增 1
 IF EXISTS (SELECT * FROM sys.sequences WHERE name = N'seq_PolicyNumber')
     DROP SEQUENCE seq_PolicyNumber;
 GO
 CREATE SEQUENCE seq_PolicyNumber
-    START WITH 1
+    START WITH 2
     INCREMENT BY 1;
 GO
 
@@ -259,5 +259,41 @@ GO
 -- 8. 賦予該使用者權限
 ALTER ROLE db_datareader ADD MEMBER app_user;
 ALTER ROLE db_datawriter ADD MEMBER app_user;
+GO
+
+-- 9. 插入首筆保單資料 (示範關聯)
+-- 注意：這裡假設前面的 IDENTITY 是從 1 開始自增
+INSERT INTO [dbo].[Policy] (
+    [policy_number], 
+    [insurance_type_id], 
+    [company_id], 
+    [insurer_id], 
+    [insured_amount], 
+    [accept_date], 
+    [begin_date], 
+    [end_date], 
+    [payment_type]
+)
+VALUES (
+    N'POL' + RIGHT('000000' + CAST(1 AS NVARCHAR(10)), 6), -- 生成 POL000001
+    1,             -- 對應 '強制險' (InsuranceType ID)
+    1,             -- 對應 '台中保險' (InsuranceCompany ID)
+    N'INS000001',  -- 對應 '測試用' 員編
+    1000.00,     -- 保費
+    '2024-01-01',  -- 受理日期
+    '2024-01-02',  -- 生效日期
+    '2025-01-01',  -- 滿期日期
+    N'年繳'         -- 繳費方式
+);
+
+-- 取得剛剛生成的 PolicyId (SQL Server 內建變數)
+DECLARE @current_policy_id INT = SCOPE_IDENTITY();
+
+-- 10. 插入保單關係人角色 (將保單與人員 陳小美/黃小東 連結)
+INSERT INTO [dbo].[PolicyPersonRole] ([policy_id], [person_id], [role])
+VALUES 
+    (@current_policy_id, 1, N'投保人'), -- 陳小美 作為投保人
+    (@current_policy_id, 1, N'被保人'), -- 陳小美 同時作為被保人
+    (@current_policy_id, 2, N'受益人'); -- 黃小東 作為受益人
 GO
 
