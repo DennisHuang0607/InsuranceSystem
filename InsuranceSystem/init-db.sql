@@ -275,7 +275,7 @@ INSERT INTO [dbo].[Policy] (
     [payment_type]
 )
 VALUES (
-    N'POL' + RIGHT('000000' + CAST(1 AS NVARCHAR(10)), 6), -- 生成 POL000001
+    N'PN' + CONVERT(NVARCHAR(8), GETDATE(), 112) + RIGHT('000000' + CAST(1 AS NVARCHAR(10)), 6),
     1,             -- 對應 '強制險' (InsuranceType ID)
     1,             -- 對應 '台中保險' (InsuranceCompany ID)
     N'INS000001',  -- 對應 '測試用' 員編
@@ -283,7 +283,7 @@ VALUES (
     '2024-01-01',  -- 受理日期
     '2024-01-02',  -- 生效日期
     '2025-01-01',  -- 滿期日期
-    N'年繳'         -- 繳費方式
+    N'annually'      -- 繳費方式
 );
 
 -- 取得剛剛生成的 PolicyId (SQL Server 內建變數)
